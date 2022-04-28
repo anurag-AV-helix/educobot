@@ -104,7 +104,7 @@ const ERROR = {
   darker: '#7A0C2E',
 };
 
-const GREY = {
+export const GREY = {
   0: '#FFFFFF',
   100: '#F9FAFB',
   200: '#F4F6F8',

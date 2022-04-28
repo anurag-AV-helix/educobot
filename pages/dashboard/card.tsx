@@ -66,14 +66,6 @@ export default function Cards() {
     }, [dummyApiData]);
     
 
-    // code to distinguish between cources that have been started, getting cources which aren't started yet with help of api and static data.
-    //const titles:string[] = dummyApiData.map(item=>item.title.toLowerCase());
-    //const licences:string[] = _homePlans.map(item=>item.license.toLowerCase());
-
-    //let programNotYetStarted:string[] = [];
-    //licences.map(licence => !titles.includes(licence) ? programNotYetStarted.push(licence) : "");
-    
-
     return (
         <RootStyle>
             <Container component={MotionViewport}>

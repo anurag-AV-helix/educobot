@@ -101,3 +101,66 @@ export const _pricingPlans = [
         labelAction: 'choose premium',
     },
 ];
+
+
+
+
+//dashboard cards data
+export const dashboardCardData = [
+    {
+        title:"Bunny & Carrot",
+        tags:["tag1", "tag2", "tag3"],
+        desc:"Help bunny to eat the carrot and return home",
+        ratings:1.5,
+        status:"done",
+        img:"/imgs/rabbitImg.png"
+    },
+    {
+        title:"Bunny & Carrot",
+        tags:["tag1", "tag2", "tag3"],
+        desc:"Help bunny to eat the carrot and return home",
+        ratings:4,
+        status:"done",
+        img:"/imgs/rabbitImg.png"
+    },
+    {
+        title:"Bunny & Carrot",
+        tags:["tag1", "tag2", "tag3"],
+        desc:"Help bunny to eat the carrot and return home",
+        status:"start",
+        ratings:undefined,
+        img:"/imgs/rabbitImg.png"
+    },
+    {
+        title:"Bunny & Carrot",
+        tags:["tag1", "tag2", "tag3"],
+        desc:"Help bunny to eat the carrot and return home",
+        ratings:0,
+        status:"locked",
+        img:"/imgs/rabbitImg.png"
+    },
+    {
+        title:"Bunny & Carrot",
+        tags:["tag1", "tag2", "tag3"],
+        desc:"Help bunny to eat the carrot and return home",
+        ratings:undefined,
+        status:"locked",
+        img:"/imgs/rabbitImg.png"
+    },
+    {
+        title:"Bunny & Carrot",
+        tags:["tag1", "tag2", "tag3"],
+        desc:"Help bunny to eat the carrot and return home",
+        ratings:undefined,
+        status:"locked",
+        img:"/imgs/rabbitImg.png"
+    },
+    {
+        title:"Bunny & Carrot",
+        tags:["tag1", "tag2", "tag3"],
+        desc:"Help bunny to eat the carrot and return home",
+        ratings:undefined,
+        status:"locked",
+        img:"/imgs/rabbitImg.png"
+    },
+]
