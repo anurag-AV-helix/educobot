@@ -400,8 +400,8 @@ function AuthProvider({ children }: AuthProviderProps) {
       password,
     });
 
-    const { accessToken, user } = response.data;
-    setSession(accessToken);
+    const { token, user } = response.data;
+    setSession(token);
     if (user) {
       setProfile(user)
       dispatch({
@@ -420,8 +420,8 @@ function AuthProvider({ children }: AuthProviderProps) {
       fname: firstName,
       lname: lastName,
     });
-    const { accessToken, user } = response.data;
-    setSession(accessToken);
+    const { token, user } = response.data;
+    setSession(token);
     // if (user) {
     setProfile(user)
     dispatch({
