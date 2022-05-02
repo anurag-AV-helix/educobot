@@ -26,7 +26,8 @@ export default function DashWelcome() {
         Introduction To Coding
       </Typography>
 
-      <RadioGroup
+      {/* <RadioGroup */}
+      {/* <RadioGroup
         row
         defaultValue="python"
         name="course_name"
@@ -64,6 +65,49 @@ export default function DashWelcome() {
 
       <Grid container spacing={3}>
         <Grid item xs={12}>
+      </RadioGroup> */}
+
+      <Grid container spacing={3}>
+        <Grid item xs={12}>
+          <RadioGroup
+            row
+            defaultValue="python"
+            name="course_name"
+            onChange={changeCourse}
+          >
+            <FormControlLabel
+              value="python"
+              control={<Radio />}
+              label={
+                selectedCourse === "python" ? (
+                  <Typography variant="h6">
+                    Certificate in Python Programming
+                  </Typography>
+                ) : (
+                  <Typography variant="h6" color={theme.palette.grey[500]}>
+                    Certificate in Python Programming
+                  </Typography>
+                )
+              }
+            />
+            <FormControlLabel
+              value="data_science"
+              control={<Radio />}
+              label={
+                selectedCourse === "data_science" ? (
+                  <Typography variant="h6">
+                    Certificate in Data Science
+                  </Typography>
+                ) : (
+                  <Typography variant="h6" color={theme.palette.grey[500]}>
+                    Certificate in Data Science
+                  </Typography>
+                )
+              }
+            />
+          </RadioGroup>
+        </Grid>
+        <Grid item xs={12}>
           <Alert
             variant="filled"
             severity="info"
@@ -98,6 +142,7 @@ export default function DashWelcome() {
                 size="small"
                 variant="outlined"
                 sx={{
+                  textTransform: "none",
                   border: (theme) =>
                     `1px solid ${alpha(theme.palette.common.black, 0.48)}`,
                 }}
@@ -123,7 +168,7 @@ export default function DashWelcome() {
                 size="small"
                 variant="outlined"
                 sx={{
-                  //   text-transform: "none",
+                  textTransform: "none",
                   border: (theme) =>
                     `1px solid ${alpha(theme.palette.common.white, 0.48)}`,
                 }}

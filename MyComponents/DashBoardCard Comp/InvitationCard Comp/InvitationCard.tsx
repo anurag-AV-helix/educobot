@@ -10,7 +10,7 @@ import {
   TextField,
 } from "@mui/material";
 //
-import GirlOnChairIllustration from "../../../assets/Illustration_girl_seating_on_chair1";
+import GirlOnChairIllustration from "../../../assets/illustration_girl_on_chair";
 import StarFull from "../../../assets/icon_starFull";
 import StarDisable from "../../../assets/icon_starDisable";
 import { translateRect } from "@fullcalendar/common";
@@ -127,7 +127,7 @@ export default function InvitationCard() {
               name="read-only"
               value={5}
               icon={<StarFull width={24} height={24} />}
-              emptyIcon={<StarDisable width={24} height={24} />}
+              emptyIcon={<StarDisable />}
               readOnly
             />
           </Box>

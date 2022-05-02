@@ -148,7 +148,7 @@ export default function AchievementCard(props: ChartAreaProps) {
               onClose={handleClose}
               open={Boolean(isOpen)}
             >
-              {CHART_DATA.map((option, index) => (
+              {CHART_DATA.map((option: any, index: any) => (
                 <MenuItem
                   key={index}
                   selected={index === selectedIndex}
@@ -208,7 +208,7 @@ export default function AchievementCard(props: ChartAreaProps) {
         }
       />
 
-      {CHART_DATA.map((item) => (
+      {CHART_DATA.map((item: any) => (
         <Box key={item.year} sx={{ mt: 3, mx: 3 }} dir="ltr">
           {item.year === seriesData && (
             <ReactApexChart

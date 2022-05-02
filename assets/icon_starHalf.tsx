@@ -1,7 +1,7 @@
 export default function StarHalf() {
   return (
     <svg
-      width="16"
+      width="20"
       height="17"
       viewBox="0 0 16 17"
       fill="none"
