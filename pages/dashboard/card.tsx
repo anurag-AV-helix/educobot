@@ -127,7 +127,7 @@ type PlanCardProps = {
     };
 };
 
-function PlanCard({ plan }: PlanCardProps) {
+export function PlanCard({ plan }: PlanCardProps) {
     const { title, LICENSE_TYPE, icons, pricing, terms, courceLength, syllabus } = plan;
 
     const standard = LICENSE_TYPE === 'Standard';

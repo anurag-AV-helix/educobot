@@ -24,6 +24,7 @@ import Iconify from '../components/Iconify';
 import { varFade, MotionViewport } from '../components/animate';
 import { PlanFreeIcon, PlanPremiumIcon, PlanStarterIcon } from '../assets';
 import Layout from '../layouts';
+import { PlanCard as Cards} from './dashboard/card';
 
 // ----------------------------------------------------------------------
 
@@ -76,7 +77,7 @@ export default function Curriculum() {
                             <m.div
                                 variants={plan.license === 'Standard Plus' ? varFade().inDown : varFade().inUp}
                             >
-                                <PlanCard plan={plan} />
+                                <Cards plan={plan} />
                             </m.div>
                         </Grid>
                     ))}

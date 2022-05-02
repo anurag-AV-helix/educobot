@@ -67,7 +67,7 @@ export default function LoginForm() {
             //         router.push(PATH_DASHBOARD.general.app);
             // })
             //window.location.href = "/dashboard/app/";
-            router.push(PATH_DASHBOARD.general.app);
+            //router.push(PATH_DASHBOARD.general.app);
         }
         catch (error: any) {
             console.error(error);

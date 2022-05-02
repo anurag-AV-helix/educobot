@@ -332,11 +332,14 @@ function AuthProvider({ children }: AuthProviderProps) {
 
   const [profile, setProfile] = useState<any>();
   let isNewUser: boolean | undefined = false;
-
+  
   useEffect(
     () =>
-      onAuthStateChanged(AUTH, async (user) => {
-        if (user) {
+      {
+        const accessToken = window.localStorage.getItem('accessToken');
+        onAuthStateChanged(AUTH, async (user) => {
+        if (user || accessToken) 
+        {
           //  setProfile(user)
           dispatch({
             type: Types.Initial,
@@ -348,7 +351,7 @@ function AuthProvider({ children }: AuthProviderProps) {
             payload: { isAuthenticated: false, user: null },
           });
         }
-      }),
+      })},
     [dispatch]
   );
 
@@ -401,7 +404,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     });
 
     const { token, user } = response.data;
-    setSession(token);
+    setSession(token, user);
     if (user) {
       setProfile(user)
       dispatch({
