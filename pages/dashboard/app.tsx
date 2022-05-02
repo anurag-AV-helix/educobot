@@ -8,7 +8,8 @@ import useSettings from '../../hooks/useSettings';
 import Layout from '../../layouts';
 // components
 import Page from '../../components/Page';
-import CourseCards from '../../MyComponents/CourseCards';
+import CourseCards from '../../MyComponents/Dashboard/CourseCards';
+import RewardsComponent from '../../MyComponents/Dashboard/RewardsComponent';
 
 
 // ----------------------------------------------------------------------
@@ -28,9 +29,8 @@ export default function GeneralApp() {
 
     return (
         <Page title="General: App">
-            <Container maxWidth={themeStretch ? false : 'xl'}>
                 <CourseCards/>
-            </Container>
+                <RewardsComponent/>
         </Page>
     );
 }

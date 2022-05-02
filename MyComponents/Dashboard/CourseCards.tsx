@@ -1,19 +1,19 @@
 // @mui
 import { useTheme, styled } from '@mui/material/styles';
-import { Box, Card, Link, Stack, Button, Divider, Typography, Container, Grid, Chip, Rating } from '@mui/material';
-import Image from '../components/Image';
-import { dashboardCardData } from "../staticData";
-import StarFull from "../assets/icon_starFull";
-import StarHalf from "../assets/icon_starHalf";
-import StarDisable from "../assets/icon_starDisable";
-import IconLock from "../assets/icon_Lock";
-import shadows from "../theme/shadows";
-import pellete from "../theme/palette";
-import Iconify from '../components/Iconify';
+import {Card, Link, Stack, Button, Typography, Container, Grid, Chip} from '@mui/material';
+import NextLink from 'next/link';
+import Image from '../../components/Image';
+import { dashboardCardData } from "../../staticData";
+import StarFull from "../../assets/icon_starFull";
+import StarHalf from "../../assets/icon_starHalf";
+import StarDisable from "../../assets/icon_starDisable";
+import IconLock from "../../assets/icon_Lock";
+import shadows from "../../theme/shadows";
+import pellete from "../../theme/palette";
+import Iconify from '../../components/Iconify';
 
 const RootStyle = styled('div')(({ theme }) => ({
     padding: theme.spacing(0, 0),
-    backgroundColor: theme.palette.background.paper,
     [theme.breakpoints.up('md')]: {
         padding: theme.spacing(0, 0),
     },
@@ -21,31 +21,37 @@ const RootStyle = styled('div')(({ theme }) => ({
 
 const CourseCards = () => {
 
+    const theme = useTheme();
+    const isLight = theme.palette.mode === 'light';
+
     return (
         <div>
             <RootStyle>
-                <Container>
+                <Container sx={{padding:0}}>
                     <Stack rowGap={4} direction="column">
                         <Typography variant="h5" component="h1">
                             Introduction To Coding
                         </Typography>
 
-                        <Stack direction={"row"} justifyContent="space-between">
+                        <Stack direction={{xs:"column", sm:"row"}} justifyContent="space-between">
                             <Typography variant="body1" component="h1" fontWeight={600}>
                                 You are in level 1 that has {dashboardCardData.length} lessons
                             </Typography>
-                            <Link href="#" target=""
-                            >
+
+                            <NextLink href="#" passHref>
+                            <Link color={"inherit"}>
                                 <Stack
                                     direction="row"
                                     alignItems="center"
-                                    sx={{ display: 'inline-flex',color:pellete.light.grey[900] }}
+                                    sx={{ display: 'inline-flex'}}
                                     spacing={1}
                                 >
                                     <Typography variant="body2">View all levels and lessons</Typography>
-                                    <Iconify icon={'ic:sharp-greater-than'} width={20} height={20} />
+                                    <Iconify icon={'eva:arrow-ios-upward-fill'} sx={{transform:"rotate(90deg)"}} width={20} height={20} />
                                 </Stack>
                             </Link>
+                            </NextLink>
+
                         </Stack>
                     </Stack>
 
@@ -54,7 +60,7 @@ const CourseCards = () => {
                             dashboardCardData.map((card, index) => {
                                 return (
                                     <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={index}>
-                                        <CardComp data={card} index={index + 1} />
+                                        <CardComp data={card} index={index + 1} isLight={isLight} theme={theme}/>
                                     </Grid>
                                 )
                             })
@@ -78,9 +84,11 @@ type CardProps = {
         img: string,
     },
     index: number
+    isLight:any
+    theme:any
 }
 
-export const CardComp = ({ data, index }: CardProps) => {
+export const CardComp = ({ data, index, isLight, theme }: CardProps) => {
 
     type StarProps = {
         full: number
@@ -114,14 +122,20 @@ export const CardComp = ({ data, index }: CardProps) => {
 
     return (
         <Card
-            sx={{ py: 2, px: 1, boxShadow: shadows.light[3], ...(data.status === "start" && { background: 'linear-gradient(135deg, #84A9FF 0%, #1939B7 100%)' }), ...(data.status === "locked" && { background: pellete.light.grey[200] }) }}>
+            sx={{ py: 2.5, px: 1, ...(data.status === "start" && { background: 'linear-gradient(135deg, #84A9FF 0%, #1939B7 100%)' }), ...(data.status === "locked" && { background: isLight && theme.palette.background.neutral }), boxShadow: (isLight && data.status==="done") && shadows.light[3] }}>
 
             {/* title & index */}
             <Stack spacing={1.5} padding={1}>
                 <Stack direction="row" alignItems="center" spacing={2}>
-                    <Typography variant="body2" fontWeight={600} sx={{ color: pellete.light.grey[100], background: pellete.light.grey[800], borderRadius: "100%", padding: "0px 8px", border: "1.1px solid #F9FAFB" }}>{index}</Typography>
+                    <Typography variant="body2" fontWeight={600} sx={{
+                        color:isLight?pellete.light.grey[100]:pellete.light.grey[900],
+                        backgroundColor:isLight?pellete.light.grey[900]:pellete.light.grey[200],
+                        borderRadius: "100%", padding: "0px 7px", border: "1.1px solid #F9FAFB",
+                        ...(data.status === "start" && { backgroundColor:pellete.light.grey[900], color: pellete.light.grey[100]}) }}>
+                            {index}
+                        </Typography>
 
-                    <Typography variant="body1" sx={{ fontSize: ".8rem", fontWeight: 600, ...(data.status === "start" && { color: pellete.light.grey[100], fontWeight: 500 }) }}>{data.title}</Typography>
+                    <Typography variant="h6" sx={{ fontSize: ".8rem", ...(data.status === "start" && { color: pellete.light.grey[100], fontWeight: 500 }) }}>{data.title}</Typography>
                 </Stack>
 
                 {/* tags */}
@@ -129,7 +143,11 @@ export const CardComp = ({ data, index }: CardProps) => {
                     {
                         data.tags.map((tag, i) =>
                             <Grid item key={i}>
-                                <Typography sx={{ fontSize: 10, paddingX: .6, paddingY: .2, borderRadius: .8, color: pellete.light.grey[600], background: pellete.light.grey[200], ...(data.status === "start" && { background: pellete.light.grey[300], color: pellete.light.grey[800] }) }}>{tag}</Typography>
+                                <Chip key={i} size="small" label={tag} sx={{
+                                    color:isLight?pellete.light.grey[600]:pellete.light.grey[400],
+                                    backgroundColor:isLight?pellete.light.grey[500_16]:pellete.light.grey[700],
+                                    borderRadius:"10px",
+                                    ...(data.status === "start" && { backgroundColor:pellete.light.grey[300], color: pellete.light.grey[800]}) }}/>
                             </Grid>
                         )
                     }
