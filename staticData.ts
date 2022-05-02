@@ -1,6 +1,6 @@
 
 // CARD  CONTENTS
-export const LICENSES = ['Introduction to Coding', "Certificate in Python Programming", 'Certificate in Data Science'];
+export const TITLES = ['Introduction to Coding', "Certificate in Python Programming", 'Certificate in Data Science'];
 export const LICENSE_TYPES = ["Basic", "Intermediate", "Advanced"];
 export const pricing = [
     {
@@ -37,7 +37,7 @@ export const syllabus = [
 export const icons = ["/pricing/illustration_maintenance.svg", "/pricing/illustration_motivation.svg", "/pricing/illustration_seo.svg"];
 
 export const _homePlans = [...Array(3)].map((_, index) => ({
-    license: LICENSES[index],
+    title: TITLES[index],
     LICENSE_TYPE: LICENSE_TYPES[index],
     pricing: pricing[index],
     terms: terms[index],

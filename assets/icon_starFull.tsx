@@ -1,6 +1,5 @@
-
-export default function StarFull() {
-    return (<svg width="20" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+export default function StarFull(props:any) {
+    return (<svg width="20" height="17" {...props} viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
     <path d="M8 0.75H12H16V16.75H8V0.75Z" fill="url(#StarFull0)"/>
     <path d="M0 0.75H4H8V16.75H0V0.75Z" fill="url(#StarFull1)"/>
     <defs>

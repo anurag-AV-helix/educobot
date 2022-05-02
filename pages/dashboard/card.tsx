@@ -55,7 +55,7 @@ export default function Cards() {
 
     const updateCardData = () => {
         const titles: string[] = dummyApiData.map(item => item.title.toLowerCase());
-        const licences: string[] = _homePlans.map(item => item.license.toLowerCase());
+        const licences: string[] = _homePlans.map(item => item.title.toLowerCase());
 
         let programNotYetStarted: string[] = [];
         licences.map(licence => !titles.includes(licence) ? programNotYetStarted.push(licence) : "");
@@ -91,7 +91,7 @@ export default function Cards() {
                     
                     {
                         _homePlans.map((plan,index)=>{
-                            if(programNotStarted.includes(plan.license.toLowerCase()))
+                            if(programNotStarted.includes(plan.title.toLowerCase()))
                             {
                                 return(
                                     <Grid item xs={12} md={4} key={index}>
@@ -115,7 +115,7 @@ export default function Cards() {
 
 type PlanCardProps = {
     plan: {
-        license: string;
+        title: string;
         LICENSE_TYPE: string;
         commons: string[];
         options: string[];
@@ -128,10 +128,10 @@ type PlanCardProps = {
 };
 
 function PlanCard({ plan }: PlanCardProps) {
-    const { license, LICENSE_TYPE, icons, pricing, terms, courceLength, syllabus } = plan;
+    const { title, LICENSE_TYPE, icons, pricing, terms, courceLength, syllabus } = plan;
 
-    const standard = license === 'Standard';
-    const plus = license === 'Standard Plus';
+    const standard = LICENSE_TYPE === 'Standard';
+    const plus = LICENSE_TYPE === 'Standard Plus';
 
     return (
         <Card
@@ -148,7 +148,7 @@ function PlanCard({ plan }: PlanCardProps) {
                     <Typography variant="overline" component="div" sx={{ mb: 2, color: 'text.disabled' }}>
                         {LICENSE_TYPE}
                     </Typography>
-                    <Typography variant="h6">{license}</Typography>
+                    <Typography variant="h6">{title}</Typography>
                     {
                         pricing.caption ?
                             <Stack direction="row" alignItems="center" spacing={1}>
