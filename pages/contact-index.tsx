@@ -24,8 +24,8 @@ import Image from "../components/Image";
 // sections
 
 // import ContactUsForm from "../MyComponents/ContactUsForm";
-import { ContactSchoolForm } from "../MyComponents/Contact Comp/ContactSchoolForm";
-import { ContactCorporateForm } from "../MyComponents/Contact Comp/ContactCorporateForm";
+import { ContactSchoolForm } from "../MyComponents/ContactComp/ContactSchoolForm";
+import { ContactCorporateForm } from "../MyComponents/ContactComp/ContactCorporateForm";
 
 // ----------------------------------------------------------------------
 

@@ -11,13 +11,13 @@ import Page from "../../components/Page";
 import CourseCards from "../../MyComponents/Dashboard/CourseCards";
 import RewardsComponent from "../../MyComponents/Dashboard/RewardsComponent";
 
-import DashWelcome from "../../MyComponents/DashBoardCard Comp/DashWelcome";
+import DashWelcome from "../../MyComponents/DashBoardCardComp/DashWelcome";
 //importing SyllabusCard
-import SyllabusCard from "../../MyComponents/DashBoardCard Comp/SyllabusCard Comp/SyllabusCard";
+import SyllabusCard from "../../MyComponents/DashBoardCardComp/SyllaBusCardComp/SyllabusCard";
 //importing AchievementCard
-import AchievementCard from "../../MyComponents/DashBoardCard Comp/AchievementCard Comp/AchievementCard";
+import AchievementCard from "../../MyComponents/DashBoardCardComp/AchievementCardComp/AchievementCard";
 //import CodeDialog
-import CodeDialog from "../../MyComponents/DialogBox Comp/CodeDialog";
+import CodeDialog from "../../MyComponents/DialogBoxComp/CodeDialog";
 // ----------------------------------------------------------------------
 
 GeneralApp.getLayout = function getLayout(page: React.ReactElement) {

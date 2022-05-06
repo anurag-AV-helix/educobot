@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 // @mui
 import { useTheme, styled, alpha } from "@mui/material/styles";
-import InvitationCard from "../DashBoardCard Comp/InvitationCard Comp/InvitationCard";
+import InvitationCard from "./InvitationCardComp/InvitationCard";
 
 export default function DashWelcome() {
   const theme = useTheme();
