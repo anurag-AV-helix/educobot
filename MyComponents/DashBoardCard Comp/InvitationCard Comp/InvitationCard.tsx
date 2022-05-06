@@ -14,6 +14,7 @@ import GirlOnChairIllustration from "../../../assets/illustration_girl_on_chair"
 import StarFull from "../../../assets/icon_starFull";
 import StarDisable from "../../../assets/icon_starDisable";
 import { translateRect } from "@fullcalendar/common";
+import StarFullNew from "../../../assets/Icon_starFullNew";
 
 // ----------------------------------------------------------------------
 
@@ -61,10 +62,11 @@ export default function InvitationCard() {
           position: "absolute",
           zIndex: 100,
           top: { lg: 0, md: 0, sm: "0%", xs: "0%" },
-          left: { lg: 0, md: 0, sm: "35%", xs: "28%" },
+          left: { lg: 0, md: 0 },
           //   transform: "translateX(50%)",
+          textAlign: "center",
           p: 3,
-          width: "140px",
+          width: { md: "140px", xs: "100%" },
           height: "202px",
         }}
       />
@@ -126,7 +128,7 @@ export default function InvitationCard() {
             <StyledRating
               name="read-only"
               value={5}
-              icon={<StarFull width={24} height={24} />}
+              icon={<StarFullNew width={24} height={24} />}
               emptyIcon={<StarDisable />}
               readOnly
             />
@@ -144,7 +146,11 @@ export default function InvitationCard() {
             fontFamily={"Public Sans"}
             fontWeight={700}
             color="#fff"
-            sx={{ pb: { xs: 2, xl: 4 }, maxWidth: 230, mx: "auto" }}
+            sx={{
+              pb: { xs: 2, xl: 4 },
+              maxWidth: 230,
+              mx: { md: 0, xs: "auto" },
+            }}
             // maxWidth="15rem"
           >
             {
@@ -157,7 +163,11 @@ export default function InvitationCard() {
             fontFamily={"Public Sans"}
             // fontWeight={700}
             color="#fff"
-            sx={{ pb: { xs: 2, xl: 4 }, maxWidth: 230, mx: "auto" }}
+            sx={{
+              pb: { xs: 2, xl: 4 },
+              maxWidth: 230,
+              mx: { md: 0, xs: "auto" },
+            }}
           >
             {"Earn 5 coins"}
           </Typography>
@@ -167,7 +177,8 @@ export default function InvitationCard() {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              // maxWidth: { md: 230, sm: "100%" },
+              maxWidth: { sm: 230 },
+              mx: "auto",
             }}
           >
             <TextField

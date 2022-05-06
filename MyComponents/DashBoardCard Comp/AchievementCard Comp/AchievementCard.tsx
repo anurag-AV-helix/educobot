@@ -18,7 +18,7 @@ import DropdownShadow from "./Shadow";
 
 // components
 import Iconify from "../../../components/Iconify";
-import Icon_download from "../../../assets/icon_download";
+import Icon_download from "../../../assets/Icon_download";
 
 // ----------------------------------------------------------------------
 
@@ -68,6 +68,12 @@ export default function AchievementCard(props: ChartAreaProps) {
       fontWeight: 500,
       fontSize: String(13),
     },
+    tooltip: {
+      style: {
+        color: "#000000",
+      },
+    },
+
     colors: [theme.palette.success.dark, theme.palette.warning.main],
     xaxis: {
       categories: [

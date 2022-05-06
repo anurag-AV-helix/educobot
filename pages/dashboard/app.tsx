@@ -16,7 +16,8 @@ import DashWelcome from "../../MyComponents/DashBoardCard Comp/DashWelcome";
 import SyllabusCard from "../../MyComponents/DashBoardCard Comp/SyllabusCard Comp/SyllabusCard";
 //importing AchievementCard
 import AchievementCard from "../../MyComponents/DashBoardCard Comp/AchievementCard Comp/AchievementCard";
-
+//import CodeDialog
+import CodeDialog from "../../MyComponents/DialogBox Comp/CodeDialog";
 // ----------------------------------------------------------------------
 
 GeneralApp.getLayout = function getLayout(page: React.ReactElement) {
@@ -119,95 +120,30 @@ export default function GeneralApp() {
           <Grid item xs={12}>
             <RewardsComponent />
           </Grid>
+          <Grid item xs={12}>
+            <CodeDialog
+              dialogInfo={{
+                dialogStatus: "start",
+                title: "Code written successfully : )",
+                subTitle:
+                  "Hope you liked doing this lesson on eduCOBOT that takes you on a journey from no code to data science.",
+              }}
+              // dialogInfo={{
+              //   dialogStatus: "exit",
+              //   title: "Exit lesson ?",
+              //   subTitle:
+              //     "Your lesson is incomplete and exiting now will mean you will loose your work done so far.",
+              // }}
+              // dialogInfo={{
+              //   dialogStatus: "success",
+              //   title: "Code written successfully : )",
+              //   subTitle:
+              //     "With this lesson, you have learned the basics of <tag1>, <tag2> and <tag3>. ",
+              // }}
+            />
+          </Grid>
         </Grid>
       </Container>
     </Page>
-    // <Page title="General: App">
-    //   <Container maxWidth={themeStretch ? false : "xl"}>
-    //     <Grid container spacing={1}>
-    //       <Grid sx={{ marginBottom: "1rem" }}>
-    //         <CourseCards />
-    //       </Grid>
-    //       <Grid container spacing={3}>
-    //         <Grid item xs={12} md={12} lg={12}>
-    //           <InvitationCard />
-    //         </Grid>
-    //         <Grid item xs={12} md={6} lg={4}>
-    //           <SyllabusCard
-    //             card={{
-    //               title: `You have completed more than expected since March 2021. Awesome:)`,
-    //               chartData: [75, 50],
-    //               labels: ["Completed", "Benchmark"],
-    //               total: 100,
-    //             }}
-    //           />
-    //         </Grid>
-
-    //         <Grid item xs={12} md={6} lg={8}>
-    //           <AchievementCard
-    //             card={{
-    //               title:
-    //                 "Last year, you have earned more coins than most students in your age group",
-    //               CHART_DATA: [
-    //                 {
-    //                   year: "Current Year",
-    //                   data: [
-    //                     {
-    //                       name: "My Coins",
-    //                       data: [19, 40, 20, 30],
-    //                     },
-    //                     {
-    //                       name: "Average Coins earned in my age group",
-    //                       data: [35, 20, 37, 15],
-    //                     },
-    //                   ],
-    //                 },
-    //                 {
-    //                   year: "Last Year",
-    //                   data: [
-    //                     {
-    //                       name: "My Coins",
-    //                       data: [
-    //                         148, 91, 69, 62, 49, 51, 35, 41, 10, 35, 41, 1,
-    //                       ],
-    //                     },
-    //                     {
-    //                       name: "Average Coins earned in my age group",
-    //                       data: [
-    //                         45, 77, 99, 88, 77, 56, 13, 34, 10, 13, 34, 10,
-    //                       ],
-    //                     },
-    //                   ],
-    //                 },
-    //                 {
-    //                   year: "2019-20",
-    //                   data: [
-    //                     {
-    //                       name: "My Coins",
-    //                       data: [1, 35, 41, 10, 35, 41, 11, 48, 91, 69, 62, 49],
-    //                     },
-    //                     {
-    //                       name: "Average Coins earned in my age group",
-    //                       data: [
-    //                         13, 34, 10, 45, 77, 99, 88, 77, 56, 10, 13, 34,
-    //                       ],
-    //                     },
-    //                   ],
-    //                 },
-    //               ],
-    //             }}
-    //           />
-    //         </Grid>
-    //       </Grid>
-    //     </Grid>
-    //   </Container>
-    // </Page>
   );
-  //   return (
-  //     <Page title="General: App">
-  //       <Container maxWidth={themeStretch ? false : "xl"}>
-  //         <CourseCards />
-  //       </Container>
-  //     </Page>
-  //   );
 }
