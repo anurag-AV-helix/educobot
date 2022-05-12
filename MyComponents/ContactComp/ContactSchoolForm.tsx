@@ -89,12 +89,12 @@ export function ContactSchoolForm() {
     formState: { errors, isSubmitting, isSubmitSuccessful },
   } = methods;
 
-  const onSubmit = async (data: FormValuesProps) => {
+ const onSubmit = async (data: FormValuesProps) => {
     try {
       // await register(data.email, data.findUs, data.firstName, data.lastName);
       const apibody = {
         cuType: "school",
-        cuBusiness: "",
+         cuBusiness: "",
         cuPinCode: data.pincode,
         cuCity: data.city,
         curriculum: data.cirruculum,

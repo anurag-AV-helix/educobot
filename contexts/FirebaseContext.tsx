@@ -173,7 +173,6 @@
 //     localStorage.setItem("accessToken", token);
 //   }
 
-
 //   const socialMediaAuth = async (provider: AuthProvider) => {
 //     signInWithPopup(AUTH, provider).then(
 //       (res: any) => {
@@ -221,21 +220,51 @@
 
 // export { AuthContext, AuthProvider };
 
-
-import { createContext, ReactNode, useEffect, useReducer, useState } from 'react';
-import Firebase, { initializeApp } from 'firebase/app';
-import { getAuth, signOut, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, AuthProvider, FacebookAuthProvider, GoogleAuthProvider, UserCredential, getAdditionalUserInfo } from 'firebase/auth';
-import { getFirestore, collection, doc, getDoc, setDoc, DocumentData } from 'firebase/firestore';
+import {
+  createContext,
+  ReactNode,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
+import Firebase, { initializeApp } from "firebase/app";
+import {
+  getAuth,
+  signOut,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  AuthProvider,
+  FacebookAuthProvider,
+  GoogleAuthProvider,
+  UserCredential,
+  getAdditionalUserInfo,
+} from "firebase/auth";
+import {
+  getFirestore,
+  collection,
+  doc,
+  getDoc,
+  setDoc,
+  DocumentData,
+} from "firebase/firestore";
 // @types
-import { ActionMap, AuthState, AuthUser, FirebaseContextType } from '../@types/auth';
+import {
+  ActionMap,
+  AuthState,
+  AuthUser,
+  FirebaseContextType,
+} from "../@types/auth";
 //
-import { FIREBASE_API } from '../config';
+import { FIREBASE_API } from "../config";
 // utils
-import axios from '../utils/axios';
-import { isValidToken, setSession } from '../utils/jwt';
+import axios from "../utils/axios";
+import { isValidToken, setSession } from "../utils/jwt";
+import { id } from "date-fns/locale";
 // ----------------------------------------------------------------------
 
-const ADMIN_EMAILS = ['demo@minimals.cc'];
+const ADMIN_EMAILS = ["demo@minimals.cc"];
 
 const firebaseApp = initializeApp(FIREBASE_API);
 
@@ -250,10 +279,10 @@ const initialState: AuthState = {
 };
 
 enum Types {
-  Initial = 'INITIALISE',
+  Initial = "INITIALISE",
   Login = "LOGIN",
   Logout = "LOGOUT",
-  Register = "REGISTER"
+  Register = "REGISTER",
 }
 
 type FirebaseAuthPayload = {
@@ -272,13 +301,14 @@ type FirebaseAuthPayload = {
   [Types.Register]: {
     isAuthenticated: boolean;
     user: AuthUser;
-  }
+  };
 };
 
-type FirebaseActions = ActionMap<FirebaseAuthPayload>[keyof ActionMap<FirebaseAuthPayload>];
+type FirebaseActions =
+  ActionMap<FirebaseAuthPayload>[keyof ActionMap<FirebaseAuthPayload>];
 
 const reducer = (state: AuthState, action: FirebaseActions) => {
-  if (action.type === 'INITIALISE') {
+  if (action.type === "INITIALISE") {
     const { isAuthenticated, user } = action.payload;
     return {
       ...state,
@@ -286,8 +316,7 @@ const reducer = (state: AuthState, action: FirebaseActions) => {
       isInitialized: true,
       user,
     };
-  }
-  else if (action.type === 'LOGIN') {
+  } else if (action.type === "LOGIN") {
     const { isAuthenticated, user } = action.payload;
     return {
       ...state,
@@ -295,8 +324,7 @@ const reducer = (state: AuthState, action: FirebaseActions) => {
       isInitialized: true,
       user,
     };
-  }
-  else if (action.type === 'REGISTER') {
+  } else if (action.type === "REGISTER") {
     const { isAuthenticated, user } = action.payload;
     return {
       ...state,
@@ -304,8 +332,7 @@ const reducer = (state: AuthState, action: FirebaseActions) => {
       isInitialized: true,
       user,
     };
-  }
-  else if (action.type === 'LOGOUT') {
+  } else if (action.type === "LOGOUT") {
     const { isAuthenticated, user } = action.payload;
     return {
       ...state,
@@ -337,7 +364,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     () =>
       onAuthStateChanged(AUTH, async (user) => {
         if (user) {
-          //  setProfile(user)
+          // setProfile(user);
           dispatch({
             type: Types.Initial,
             payload: { isAuthenticated: true, user },
@@ -355,7 +382,7 @@ function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     const initialize = async () => {
       try {
-        const accessToken = window.localStorage.getItem('accessToken');
+        const accessToken = window.localStorage.getItem("accessToken");
         if (accessToken && isValidToken(accessToken)) {
           //setSession(accessToken);
           // if (typeof isNewUser !== 'undefined' && !isNewUser) {
@@ -395,26 +422,31 @@ function AuthProvider({ children }: AuthProviderProps) {
 
   const login = async (email: string, password: string) => {
     //const response = await axios.post('https://minimal-assets-api.vercel.app/api/account/register',
-    const response = await axios.post('/users/getSaasUser', {
+    const response = await axios.post("/users/getSaasUser", {
       email,
       password,
     });
 
     const { token, user } = response.data;
-    setSession(token);
+    setSession(token, user);
     if (user) {
-      setProfile(user)
+      setProfile(user);
       dispatch({
         type: Types.Login,
         payload: { isAuthenticated: true, user },
       });
     }
-    return user
-  }
+    return user;
+  };
 
-  const register = async (email: string, password: string, firstName: string, lastName: string) => {
+  const register = async (
+    email: string,
+    password: string,
+    firstName: string,
+    lastName: string
+  ) => {
     //const response = await axios.post('https://minimal-assets-api.vercel.app/api/account/register', {
-    const response = await axios.post('/users/saasSignUP', {
+    const response = await axios.post("/users/saasSignUP", {
       email,
       password,
       fname: firstName,
@@ -423,58 +455,70 @@ function AuthProvider({ children }: AuthProviderProps) {
     const { token, user } = response.data;
     setSession(token);
     // if (user) {
-    setProfile(user)
+    setProfile(user);
     dispatch({
       type: Types.Register,
       payload: { isAuthenticated: true, user },
     });
     // }
-  }
+  };
 
   const socialMediaAuth = async (provider: AuthProvider) => {
-    signInWithPopup(AUTH, provider).then(
-      (res: any) => {
-        const accessToken = (res.user.accessToken);
-        isNewUser = (getAdditionalUserInfo(res)?.isNewUser)
-        setProfile(res.user)
-        setSession(accessToken);
-        return res.user
-      });
-  }
+    signInWithPopup(AUTH, provider).then((res: any) => {
+      const accessToken = res.user.accessToken;
+      isNewUser = getAdditionalUserInfo(res)?.isNewUser;
+      setProfile(res.user);
+      setSession(accessToken);
+      return res.user;
+    });
+  };
 
   const logout = () => {
     setSession(null);
     dispatch({
       type: Types.Logout,
       payload: { isAuthenticated: false, user: null },
-    }); return signOut(AUTH);
-
-  }
+    });
+    return signOut(AUTH);
+  };
 
   return (
     <AuthContext.Provider
       value={{
         ...state,
-        method: 'firebase',
+        method: "firebase",
         user: {
-          id: state?.user?.uid,
-          email: state?.user?.email,
+          id: state?.user?.suUID,
+          email: state?.user?.suEmail,
           photoURL: state?.user?.photoURL || profile?.photoURL,
-          displayName: state?.user?.displayName || profile?.displayName,
-          role: ADMIN_EMAILS.includes(state?.user?.email) ? 'admin' : 'student',
-          phoneNumber: state?.user?.phoneNumber || profile?.phoneNumber || '',
-          country: profile?.country || '',
-          address: profile?.address || '',
-          state: profile?.state || '',
-          city: profile?.city || '',
-          zipCode: profile?.zipCode || '',
-          about: profile?.about || '',
+          displayName:
+            state?.user?.displayName ||
+            profile?.suFname + " " + profile?.suLName,
+          // role: ADMIN_EMAILS.includes(state?.user?.email) ? "admin" : "student",
+          role: () => {
+            if (state?.user?.suEmail === "anurag.av@helixsta.in") {
+              return "Student";
+            } else if (state?.user?.suEmail === "anurag.av@helixstack.in") {
+              return "Teacher";
+            } else if (state?.user?.suEmail === "schooladmin@gmail.com") {
+              return "School Admin";
+            } else if (state?.user?.suEmail === "superadmin@gmail.com") {
+              return "Super Admin";
+            }
+          },
+          phoneNumber: state?.user?.phoneNumber || profile?.phoneNumber || "",
+          country: profile?.country || "",
+          address: profile?.address || "",
+          state: profile?.state || "",
+          city: profile?.city || "",
+          zipCode: profile?.zipCode || "",
+          about: profile?.about || "",
           isPublic: profile?.isPublic || false,
         },
         login,
         register,
         logout,
-        socialMediaAuth
+        socialMediaAuth,
       }}
     >
       {children}

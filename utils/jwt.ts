@@ -1,6 +1,6 @@
-import jwtDecode from 'jwt-decode';
+import jwtDecode from "jwt-decode";
 //
-import axios from './axios';
+import axios from "./axios";
 
 // ----------------------------------------------------------------------
 
@@ -27,15 +27,18 @@ const isValidToken = (accessToken: string) => {
 //   }, timeLeft);
 // };
 
-const setSession = (accessToken: string | null) => {
+const setSession = (accessToken: string | null, user?: any) => {
   if (accessToken) {
-    localStorage.setItem('accessToken', accessToken);
+    window.localStorage.setItem("role", "superAdmin");
+    localStorage.setItem("accessToken", accessToken);
+    user && window.localStorage.setItem("userID", user.suUID);
     axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
     // This function below will handle when token is expired
     // const { exp } = jwtDecode(accessToken);
     // handleTokenExpired(exp);
   } else {
-    localStorage.removeItem('accessToken');
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userID");
     delete axios.defaults.headers.common.Authorization;
   }
 };

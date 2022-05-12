@@ -83,7 +83,7 @@ export default function SyllabusCard({ card }: SyllabusRadialBarProps) {
             lineHeight: theme.typography.h3.lineHeight,
           },
           total: {
-            formatter: () => `:)`,
+            formatter: () => `: )`,
             label: (card.chartData[0] * 100) / card.chartData[1] + "%",
             offsetY: 8,
             color: theme.palette.text.primary,

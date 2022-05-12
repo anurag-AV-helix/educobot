@@ -1,24 +1,30 @@
-import { memo } from 'react';
+import { memo, useEffect, useState } from "react";
 // @mui
-import { styled } from '@mui/material/styles';
-import { Container, AppBar } from '@mui/material';
+import { styled } from "@mui/material/styles";
+import { Container, AppBar } from "@mui/material";
 // config
-import { HEADER } from '../../../config';
+import { HEADER } from "../../../config";
 
 // components
-import { NavSectionHorizontal } from '../../../components/nav-section';
+import { NavSectionHorizontal } from "../../../components/nav-section";
 //
-import navConfig from './NavConfig';
+import navConfig, {
+  studentConfig,
+  teacherConfig,
+  schoolAdminConfig,
+  superAdminConfig,
+} from "./NavConfig";
+import useAuth from "../../../hooks/useAuth";
 
 // ----------------------------------------------------------------------
 
 const RootStyle = styled(AppBar)(({ theme }) => ({
-  transition: theme.transitions.create('top', {
+  transition: theme.transitions.create("top", {
     easing: theme.transitions.easing.easeInOut,
     duration: theme.transitions.duration.shorter,
   }),
-  width: '100%',
-  position: 'fixed',
+  width: "100%",
+  position: "fixed",
   zIndex: theme.zIndex.appBar,
   padding: theme.spacing(1, 0),
   boxShadow: theme.customShadows.z8,
@@ -29,10 +35,27 @@ const RootStyle = styled(AppBar)(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 function NavbarHorizontal() {
+  const [whichNavBar, setNavBar] = useState(navConfig);
+  const { user } = useAuth();
+
+  useEffect(() => {
+    const role = user?.email;
+    if (role === "anurag.av@helixsta.in") {
+      setNavBar(studentConfig);
+    } else if (role === "anurag.av@helixstack.in") {
+      setNavBar(teacherConfig);
+    } else if (role === "schooladmin@gmail.com") {
+      setNavBar(schoolAdminConfig);
+    } else if (role === "superadmin@gmail.com") {
+      setNavBar(superAdminConfig);
+    } else {
+      setNavBar(navConfig);
+    }
+  }, [whichNavBar]);
   return (
     <RootStyle>
       <Container maxWidth={false}>
-        <NavSectionHorizontal navConfig={navConfig} />
+        <NavSectionHorizontal navConfig={whichNavBar} />
       </Container>
     </RootStyle>
   );
