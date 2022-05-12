@@ -1,33 +1,39 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from "react";
 // next
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
 // @mui
-import { styled, useTheme } from '@mui/material/styles';
-import { Box, Stack, Drawer } from '@mui/material';
+import { styled, useTheme } from "@mui/material/styles";
+import { Box, Stack, Drawer } from "@mui/material";
 // hooks
-import useResponsive from '../../../hooks/useResponsive';
-import useCollapseDrawer from '../../../hooks/useCollapseDrawer';
+import useResponsive from "../../../hooks/useResponsive";
+import useCollapseDrawer from "../../../hooks/useCollapseDrawer";
 // utils
-import cssStyles from '../../../utils/cssStyles';
+import cssStyles from "../../../utils/cssStyles";
 // config
-import { NAVBAR } from '../../../config';
+import { NAVBAR } from "../../../config";
 
 // components
-import Logo from '../../../components/Logo';
-import Scrollbar from '../../../components/Scrollbar';
-import { NavSectionVertical } from '../../../components/nav-section';
+import Logo from "../../../components/Logo";
+import Scrollbar from "../../../components/Scrollbar";
+import { NavSectionVertical } from "../../../components/nav-section";
 //
-import navConfig from './NavConfig';
-import NavbarDocs from './NavbarDocs';
-import NavbarAccount from './NavbarAccount';
-import CollapseButton from './CollapseButton';
+import navConfig, {
+  studentConfig,
+  teacherConfig,
+  schoolAdminConfig,
+  superAdminConfig,
+} from "./NavConfig";
+import NavbarDocs from "./NavbarDocs";
+import NavbarAccount from "./NavbarAccount";
+import CollapseButton from "./CollapseButton";
+import useAuth from "../../../hooks/useAuth";
 
 // ----------------------------------------------------------------------
 
-const RootStyle = styled('div')(({ theme }) => ({
-  [theme.breakpoints.up('lg')]: {
+const RootStyle = styled("div")(({ theme }) => ({
+  [theme.breakpoints.up("lg")]: {
     flexShrink: 0,
-    transition: theme.transitions.create('width', {
+    transition: theme.transitions.create("width", {
       duration: theme.transitions.duration.shorter,
     }),
   },
@@ -40,15 +46,28 @@ type Props = {
   onCloseSidebar: VoidFunction;
 };
 
-export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }: Props) {
+export default function NavbarVertical({
+  isOpenSidebar,
+  onCloseSidebar,
+}: Props) {
   const theme = useTheme();
+
+  const { user } = useAuth();
 
   const { pathname } = useRouter();
 
-  const isDesktop = useResponsive('up', 'lg');
+  const isDesktop = useResponsive("up", "lg");
 
-  const { isCollapse, collapseClick, collapseHover, onToggleCollapse, onHoverEnter, onHoverLeave } =
-    useCollapseDrawer();
+  const [whichNavBar, setNavBar] = useState(navConfig);
+
+  const {
+    isCollapse,
+    collapseClick,
+    collapseHover,
+    onToggleCollapse,
+    onHoverEnter,
+    onHoverLeave,
+  } = useCollapseDrawer();
 
   useEffect(() => {
     if (isOpenSidebar) {
@@ -57,31 +76,60 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }: Props)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
+  useEffect(() => {
+    const role = user?.email;
+    if (role === "anurag.av@helixsta.in") {
+      setNavBar(studentConfig);
+    } else if (role === "anurag.av@helixstack.in") {
+      setNavBar(teacherConfig);
+    } else if (role === "schooladmin@gmail.com") {
+      setNavBar(schoolAdminConfig);
+    } else if (role === "superadmin@gmail.com") {
+      setNavBar(superAdminConfig);
+    } else {
+      setNavBar(navConfig);
+    }
+  }, [whichNavBar]);
+
   const renderContent = (
     <Scrollbar
       sx={{
         height: 1,
-        '& .simplebar-content': { height: 1, display: 'flex', flexDirection: 'column' },
+        "& .simplebar-content": {
+          height: 1,
+          display: "flex",
+          flexDirection: "column",
+        },
       }}
     >
       <Stack
         spacing={3}
         sx={{
-          pt: 3, pb: 2, px: 2.5, flexShrink: 0,
-          ...(isCollapse && { alignItems: 'center' }),
+          pt: 3,
+          pb: 2,
+          px: 2.5,
+          flexShrink: 0,
+          ...(isCollapse && { alignItems: "center" }),
         }}
       >
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+        >
           {/* needs to be small when collapse */}
           <Logo />
           {isDesktop && !isCollapse && (
-            <CollapseButton onToggleCollapse={onToggleCollapse} collapseClick={collapseClick} />
+            <CollapseButton
+              onToggleCollapse={onToggleCollapse}
+              collapseClick={collapseClick}
+            />
           )}
         </Stack>
         <NavbarAccount isCollapse={isCollapse} />
       </Stack>
 
-      <NavSectionVertical navConfig={navConfig} isCollapse={isCollapse} />
+      <NavSectionVertical navConfig={whichNavBar} isCollapse={isCollapse} />
 
       <Box sx={{ flexGrow: 1 }} />
 
@@ -93,10 +141,12 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }: Props)
     <RootStyle
       sx={{
         width: {
-          lg: isCollapse ? NAVBAR.DASHBOARD_COLLAPSE_WIDTH : NAVBAR.DASHBOARD_WIDTH,
+          lg: isCollapse
+            ? NAVBAR.DASHBOARD_COLLAPSE_WIDTH
+            : NAVBAR.DASHBOARD_WIDTH,
         },
         ...(collapseClick && {
-          position: 'absolute',
+          position: "absolute",
         }),
       }}
     >
@@ -119,10 +169,10 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }: Props)
           PaperProps={{
             sx: {
               width: NAVBAR.DASHBOARD_WIDTH,
-              borderRightStyle: 'dashed',
-              bgcolor: 'background.default',
+              borderRightStyle: "dashed",
+              bgcolor: "background.default",
               transition: (theme) =>
-                theme.transitions.create('width', {
+                theme.transitions.create("width", {
                   duration: theme.transitions.duration.standard,
                 }),
               ...(isCollapse && {

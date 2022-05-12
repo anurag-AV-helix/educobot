@@ -1,6 +1,8 @@
 import merge from "lodash/merge";
 import { useState } from "react";
 // @mui
+import { styled } from "@mui/material/styles";
+// @mui
 import { useTheme } from "@mui/material/styles";
 import {
   Card,
@@ -18,7 +20,7 @@ import DropdownShadow from "./Shadow";
 
 // components
 import Iconify from "../../../components/Iconify";
-import Icon_download from "../../../assets/Icon_download";
+import Icon_download from "../../../assets/icon_download";
 
 // ----------------------------------------------------------------------
 
@@ -28,6 +30,21 @@ interface ChartAreaProps {
     CHART_DATA: any;
   };
 }
+
+// const StyledCardHeader = styled(CardHeader)({
+//   flexDirection: "row",
+//   [theme.breakpoints.down("md")]: {
+//     flexDirection: "column",
+//   },
+// });
+
+const StyledCardHeader = styled(CardHeader)(({ theme }) => ({
+  flexDirection: "row",
+  [theme.breakpoints.down("sm")]: {
+    flexDirection: "column",
+    gap: "1rem",
+  },
+}));
 
 export default function AchievementCard(props: ChartAreaProps) {
   const { title, CHART_DATA } = props.card;
@@ -68,11 +85,11 @@ export default function AchievementCard(props: ChartAreaProps) {
       fontWeight: 500,
       fontSize: String(13),
     },
-    tooltip: {
-      style: {
-        color: "#000000",
-      },
-    },
+    // tooltip: {
+    //   style: {
+    //     backgroundColor: "#000",
+    //   },
+    // },
 
     colors: [theme.palette.success.dark, theme.palette.warning.main],
     xaxis: {
@@ -95,7 +112,7 @@ export default function AchievementCard(props: ChartAreaProps) {
 
   return (
     <Card>
-      <CardHeader
+      <StyledCardHeader
         title="Achievement (coins earned)"
         subheader="Last year, you have earned more coins than most students in your age group"
         titleTypographyProps={{ variant: "h5", my: 1 }}
@@ -127,6 +144,7 @@ export default function AchievementCard(props: ChartAreaProps) {
                   </Button>
                   <IconButton
                     color="inherit"
+                    sx={{ padding: "0px" }}
                     onClick={() => {
                       alert("Download Started");
                     }}
@@ -137,7 +155,7 @@ export default function AchievementCard(props: ChartAreaProps) {
                 </>
               }
               sx={{
-                width: "200px",
+                width: "auto",
                 px: 1,
                 py: 0.5,
                 mx: 0,

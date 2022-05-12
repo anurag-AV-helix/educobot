@@ -1,3 +1,8 @@
+import * as Yup from "yup";
+// form
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+
 import { useState } from "react";
 import {
   Typography,
@@ -8,23 +13,126 @@ import {
   AlertTitle,
   Button,
   Grid,
+  Stack,
+  TextField,
 } from "@mui/material";
 // @mui
 import { useTheme, styled, alpha } from "@mui/material/styles";
 import InvitationCard from "./InvitationCardComp/InvitationCard";
 
+import {
+  FormProvider,
+  RHFSelect,
+  RHFTextField,
+} from "../../components/hook-form";
+
+import { LoadingButton } from "@mui/lab";
+
+type FormValuesProps = {
+  rollNumber: string;
+  otp: string;
+};
+
 export default function DashWelcome() {
   const theme = useTheme();
   const [selectedCourse, setSelectedCourse] = useState("python");
+
+  const RegisterSchema = Yup.object().shape({
+    rollNumber: Yup.string().required("Roll Number Required"),
+    otp: Yup.string().required("OTP required"),
+  });
+
+  const defaultValues = {
+    rollNumber: "",
+    otp: "",
+  };
+
+  const methods = useForm<FormValuesProps>({
+    resolver: yupResolver(RegisterSchema),
+    defaultValues,
+  });
+
+  const {
+    reset,
+    setError,
+    handleSubmit,
+    formState: { errors, isSubmitting, isSubmitSuccessful },
+  } = methods;
+
+  const onSubmit = async (data: FormValuesProps) => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      const userID = localStorage.getItem("userID");
+      const apibody = {
+        rollNumber: data.rollNumber,
+        otp: data.otp,
+        token: token,
+        userID: userID,
+      };
+
+      console.log(apibody);
+      // const response = await axios.post("users/postContactUs", apibody);
+      // response.status === 200 && reset();
+      // console.log(response);
+    } catch (error: any) {
+      console.error(error);
+      reset();
+    }
+  };
 
   const changeCourse = (event: any) => {
     setSelectedCourse(event.target.value);
   };
   return (
     <>
-      <Typography variant="h5" component="h1">
-        Introduction To Coding
-      </Typography>
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+        <Stack
+          direction={{ xs: "column", md: "row" }}
+          justifyContent={"space-between"}
+          spacing={2}
+          alignItems={{ xs: "start", md: "center" }}
+        >
+          <Typography variant="h5" component="h1">
+            Introduction To Coding
+          </Typography>
+
+          <Stack
+            width={{ xs: "100%", sm: "auto" }}
+            direction={{ xs: "column", sm: "row" }}
+            spacing={2}
+          >
+            <RHFTextField
+              name="rollNumber"
+              variant="outlined"
+              placeholder="Roll number"
+              inputProps={{
+                style: {
+                  padding: 10,
+                },
+              }}
+            />
+            <RHFTextField
+              name="otp"
+              variant="outlined"
+              placeholder="OTP"
+              inputProps={{
+                style: {
+                  padding: 10,
+                },
+              }}
+            />
+            <LoadingButton
+              fullWidth
+              size="large"
+              type="submit"
+              variant="contained"
+              loading={isSubmitting}
+            >
+              Start Lesson
+            </LoadingButton>
+          </Stack>
+        </Stack>
+      </FormProvider>
 
       {/* <RadioGroup */}
       {/* <RadioGroup

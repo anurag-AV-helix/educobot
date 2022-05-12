@@ -28,6 +28,7 @@ GeneralApp.getLayout = function getLayout(page: React.ReactElement) {
 
 export default function GeneralApp() {
   const { user } = useAuth();
+  console.log("User Form Dashboard", user);
 
   const theme = useTheme();
 
@@ -68,7 +69,7 @@ export default function GeneralApp() {
             />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={8}>
+          <Grid item xs={12} md={8} lg={8}>
             <AchievementCard
               card={{
                 title:
