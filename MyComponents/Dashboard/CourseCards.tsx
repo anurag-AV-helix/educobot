@@ -54,11 +54,18 @@ const CourseCards = () => {
          {
             axios.post("http://localhost:3001/api/authorize", { token, lesson_id, userID, exerciseType })
                  .then(
-                    //  res => {
-                    //      if (res.data.success === true) {
-                    //          router.push(`${href}/${res.data.lesson[0].slug}`)
-                    //      }
-                    //  }
+                     res => {
+                         if (res.data.success === true) {
+                            const {slug, slugType} = res.data.lesson[0];
+
+                            href = res.data.lesson[0].slugType == "blockly" ?
+                            (`${href}${"blocky"}`) : //as of now 'blocky' due to wrong name in project
+                            (`${href}${slugType}/${slug}`);
+
+                            // href = `${href}${exerciseType}/${res.data.lesson[0].slug}`;
+                            router.push(href);
+                        }
+                    }
                  )
             .catch(err=>{
                 console.log(err)
