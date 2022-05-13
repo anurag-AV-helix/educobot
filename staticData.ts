@@ -114,10 +114,10 @@ export const dashboardCardData = [
         ratings:1.5,
         status:"done",
         img:"/imgs/rabbitImg.png",
-        href:"http://localhost:3001/problems/",
+        href:"http://localhost:3001/",
         lesson_id:1,
         slug:"dog",
-        slugType:"exercise"
+        slugType:"problems"
     },
     {
         title:"Bunny & Carrot",
@@ -126,7 +126,7 @@ export const dashboardCardData = [
         ratings:4,
         status:"done",
         img:"/imgs/rabbitImg.png",
-        href:"http://localhost:3001/problems/",
+        href:"http://localhost:3001/",
         lesson_id:2,
         slug:"bunny",
         slugType:"blockly"
@@ -138,10 +138,10 @@ export const dashboardCardData = [
         status:"start",
         ratings:undefined,
         img:"/imgs/rabbitImg.png",
-        href:"http://localhost:3001/problems/",
+        href:"http://localhost:3001/",
         lesson_id:3,
         slug:"dog",
-        slugType:"exercise"
+        slugType:"problems"
     },
     {
         title:"Bunny & Carrot",
