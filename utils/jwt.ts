@@ -29,9 +29,8 @@ const isValidToken = (accessToken: string) => {
 
 const setSession = (accessToken: string | null, user?: any) => {
   if (accessToken) {
-    window.localStorage.setItem("role", "superAdmin");
-    localStorage.setItem("accessToken", accessToken);
-    user && window.localStorage.setItem("userID", user.suUID);
+    localStorage.setItem('accessToken', accessToken);
+    user && localStorage.setItem("userID", user.suUID);
     axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
     // This function below will handle when token is expired
     // const { exp } = jwtDecode(accessToken);

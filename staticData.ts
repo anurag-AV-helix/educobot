@@ -113,7 +113,11 @@ export const dashboardCardData = [
         desc:"Help bunny to eat the carrot and return home",
         ratings:1.5,
         status:"done",
-        img:"/imgs/rabbitImg.png"
+        img:"/imgs/rabbitImg.png",
+        href:"http://localhost:3001/problems/",
+        lesson_id:1,
+        slug:"dog",
+        slugType:"exercise"
     },
     {
         title:"Bunny & Carrot",
@@ -121,7 +125,11 @@ export const dashboardCardData = [
         desc:"Help bunny to eat the carrot and return home",
         ratings:4,
         status:"done",
-        img:"/imgs/rabbitImg.png"
+        img:"/imgs/rabbitImg.png",
+        href:"http://localhost:3001/problems/",
+        lesson_id:2,
+        slug:"bunny",
+        slugType:"blockly"
     },
     {
         title:"Bunny & Carrot",
@@ -129,7 +137,11 @@ export const dashboardCardData = [
         desc:"Help bunny to eat the carrot and return home",
         status:"start",
         ratings:undefined,
-        img:"/imgs/rabbitImg.png"
+        img:"/imgs/rabbitImg.png",
+        href:"http://localhost:3001/problems/",
+        lesson_id:3,
+        slug:"dog",
+        slugType:"exercise"
     },
     {
         title:"Bunny & Carrot",
@@ -137,7 +149,8 @@ export const dashboardCardData = [
         desc:"Help bunny to eat the carrot and return home",
         ratings:0,
         status:"locked",
-        img:"/imgs/rabbitImg.png"
+        img:"/imgs/rabbitImg.png",
+        lesson_id:4
     },
     {
         title:"Bunny & Carrot",
@@ -145,7 +158,8 @@ export const dashboardCardData = [
         desc:"Help bunny to eat the carrot and return home",
         ratings:undefined,
         status:"locked",
-        img:"/imgs/rabbitImg.png"
+        img:"/imgs/rabbitImg.png",
+        lesson_id:5
     },
     {
         title:"Bunny & Carrot",
@@ -153,7 +167,8 @@ export const dashboardCardData = [
         desc:"Help bunny to eat the carrot and return home",
         ratings:undefined,
         status:"locked",
-        img:"/imgs/rabbitImg.png"
+        img:"/imgs/rabbitImg.png",
+        lesson_id:6
     },
     {
         title:"Bunny & Carrot",
@@ -161,6 +176,7 @@ export const dashboardCardData = [
         desc:"Help bunny to eat the carrot and return home",
         ratings:undefined,
         status:"locked",
-        img:"/imgs/rabbitImg.png"
+        img:"/imgs/rabbitImg.png",
+        lesson_id:7
     },
 ]
