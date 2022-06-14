@@ -56,6 +56,8 @@ export const PATH_DASHBOARD = {
     list: path(ROOTS_DASHBOARD, `/teacher/studentlist`),
     new: path(ROOTS_DASHBOARD, "/teacher/new"),
     curriculum: path(ROOTS_DASHBOARD, "/teacher/curriculum"),
+    viewProgress:path(ROOTS_DASHBOARD, "/teacher/viewProgress"),
+    viewReport:path(ROOTS_DASHBOARD, "/teacher/viewReport"),
   },
   schoolAdmin: {
     root: path(ROOTS_DASHBOARD, "/schooladmin"),

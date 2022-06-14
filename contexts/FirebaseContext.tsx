@@ -276,6 +276,7 @@ const initialState: AuthState = {
   isAuthenticated: false,
   isInitialized: false,
   user: null,
+  userType: "",
 };
 
 enum Types {
@@ -289,10 +290,12 @@ type FirebaseAuthPayload = {
   [Types.Initial]: {
     isAuthenticated: boolean;
     user: AuthUser;
+    userType:string;
   };
   [Types.Login]: {
     isAuthenticated: boolean;
     user: AuthUser;
+    userType:string;
   };
   [Types.Logout]: {
     isAuthenticated: boolean;
@@ -309,20 +312,22 @@ type FirebaseActions =
 
 const reducer = (state: AuthState, action: FirebaseActions) => {
   if (action.type === "INITIALISE") {
-    const { isAuthenticated, user } = action.payload;
+    const { isAuthenticated, user, userType} = action.payload;
     return {
       ...state,
       isAuthenticated,
       isInitialized: true,
       user,
+      userType,
     };
   } else if (action.type === "LOGIN") {
-    const { isAuthenticated, user } = action.payload;
+    const { isAuthenticated, user,userType } = action.payload;
     return {
       ...state,
       isAuthenticated,
       isInitialized: true,
       user,
+      userType,
     };
   } else if (action.type === "REGISTER") {
     const { isAuthenticated, user } = action.payload;
@@ -363,18 +368,18 @@ function AuthProvider({ children }: AuthProviderProps) {
   // useEffect(
   //   () =>
   //     onAuthStateChanged(AUTH, async (user) => {
+  //       console.log("user", user)
   //       //const token = window.localStorage.getItem("accessToken");
-  //       console.log(user, "user")
   //       if (user) {
   //         // setProfile(user);
   //         dispatch({
   //           type: Types.Initial,
-  //           payload: { isAuthenticated: true, user },
+  //           payload: { isAuthenticated: true, user, userType:"" },
   //         });
   //       } else {
   //         dispatch({
   //           type: Types.Initial,
-  //           payload: { isAuthenticated: false, user: null },
+  //           payload: { isAuthenticated: false, user: null, userType:""},
   //         });
   //       }
   //     }),
@@ -397,6 +402,7 @@ function AuthProvider({ children }: AuthProviderProps) {
             payload: {
               isAuthenticated: true,
               user: profile,
+              userType:""
             },
           });
         } else {
@@ -405,6 +411,7 @@ function AuthProvider({ children }: AuthProviderProps) {
             payload: {
               isAuthenticated: false,
               user: null,
+              userType:""
             },
           });
         }
@@ -415,6 +422,7 @@ function AuthProvider({ children }: AuthProviderProps) {
           payload: {
             isAuthenticated: false,
             user: null,
+            userType:""
           },
         });
       }
@@ -430,14 +438,13 @@ function AuthProvider({ children }: AuthProviderProps) {
       password,
     });
 
-    const { token, user, schoolID } = response.data;
-    console.log(response)
+    const { token, user, schoolID, userType} = response.data;
     setSession(token, user, schoolID);
     if (user) {
       setProfile(user);
       dispatch({
         type: Types.Login,
-        payload: { isAuthenticated: true, user },
+        payload: { isAuthenticated: true, user, userType },
       });
     }
     return user;
@@ -485,7 +492,6 @@ function AuthProvider({ children }: AuthProviderProps) {
     });
     return signOut(AUTH);
   };
-
   return (
     <>
       <AuthContext.Provider
@@ -496,9 +502,9 @@ function AuthProvider({ children }: AuthProviderProps) {
             id: state?.user?.userID,
             email: state?.user?.suEmail,
             photoURL: state?.user?.photoURL || profile?.photoURL,
-            displayName: state?.user?.name || profile?.name || "Teacher 1",
+            displayName: state?.user?.name || profile?.name || state?.userType,
             // role: ADMIN_EMAILS.includes(state?.user?.email) ? "admin" : "student",
-            role: state?.user?.userType || "Teacher",
+            role: state?.userType || "",
             phoneNumber: state?.user?.phoneNumber || profile?.phoneNumber || "",
             country: profile?.country || "",
             address: profile?.address || "",

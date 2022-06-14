@@ -38,6 +38,7 @@ type FormValuesProps = {
 export default function LoginForm() {
   const { login } = useAuth();
   const router = useRouter();
+  const [otpError, setOtpError] = useState(false);
 
   const isMountedRef = useIsMountedRef();
 
@@ -62,18 +63,18 @@ export default function LoginForm() {
     defaultValues,
   });
 
-  const {
+  let {
     reset,
     setError,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = methods;
 
-  const onSubmit = async (data: FormValuesProps) => {
+  const onSubmit = async (data: FormValuesProps, e:any) => {
     try {
       const { rollno, otp, email, password } = data;
 
-      if (rollno !== undefined && otp !== undefined) {
+      if (rollno && otp) {
         const apibody = {
           "email": "",
           "password": "",
@@ -87,25 +88,25 @@ export default function LoginForm() {
 
         let link = `${process.env.webAppUrl}/${lessonType}/${response.data.lessonID}?user_id=${response.data.user}`
         if (typeof window != 'undefined')
-          window.location.href = link
-      } else if (email !== '' && password !== '') {
-        console.log('Email Method');
+          window.open(link)
+
+        e.target.reset()
+      }
+
+      else if (email !== '' && password !== '') {
         const response = await login(data.email, data.password);
       }
 
+      else if(!rollno || !otp)
+      {
+        e.target.reset()
+        setOtpError(true);
+      }
+    }
+     catch (error: any) {
+      setOtpError(true);
+      e.target.reset();
 
-
-      // await axios.post("https://minimal-assets-api.vercel.app/api/account/login", {email:data.email, password:data.password}).then(res=>{
-      //     if(res.data.accessToken)
-      //         localStorage.setItem("accessToken", res.data.accessToken);
-      //         router.push(PATH_DASHBOARD.general.app);
-      // })
-      //window.location.href = "/dashboard/app/";
-
-      //   router.push(PATH_DASHBOARD.general.app);
-    } catch (error: any) {
-      console.error(error);
-      reset();
       if (isMountedRef.current) {
         setError("afterSubmit", { ...error, message: error.message });
       }
@@ -115,11 +116,18 @@ export default function LoginForm() {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
 
-      {!!errors.afterSubmit && (
+      {!!errors.afterSubmit && !otpError && (
         <Alert severity="error" sx={{ mb: 2 }}>
           Wrong credentials or User does not exist
         </Alert>
       )}
+
+      {
+        otpError &&
+        <Alert severity="error" sx={{ mb: 2 }}>
+          Invalid Roll no or OTP
+        </Alert>
+      }
 
       <Typography sx={{ color: 'text.secondary', mb: 1 }}>
         In school using OTP given by teacher

@@ -41,7 +41,7 @@ import {
 } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 // routes
-import { PATH_DASHBOARD } from "../../../routes/paths";
+import { PATH_AUTH, PATH_DASHBOARD } from "../../../routes/paths";
 // hooks
 import useTabs from "../../../hooks/useTabs";
 import useSettings from "../../../hooks/useSettings";
@@ -83,6 +83,7 @@ import Image from "../../../components/Image";
 import axios from "axios";
 import dummyIMG from "../../../public/imgs/rabbitImg.png"
 import { ClassNames } from "@emotion/react";
+import Link from "next/link";
 
 // ----------------------------------------------------------------------
 
@@ -124,8 +125,8 @@ export default function Curriculum() {
     ActiveId: [],
     validity: [],
     started: [],
-    expired:[],
-    nextLesson:""
+    expired: ["e0c38e50-cbb3-455f-ae16-d737fc624b24"],
+    nextLesson: ""
   });
 
   const [openOTP, setOpenOtp] = useState([]);
@@ -146,9 +147,9 @@ export default function Curriculum() {
       .then(res => {
         if (res.data.STATUS === "SUCCESS") {
           setData(res.data.DATA)
-          
+
           let allLessonsArr = [];
-          res.data.DATA.map((obj, i)=> obj.LESSONS.map(lesson => allLessonsArr.push(lesson)));
+          res.data.DATA.map((obj, i) => obj.LESSONS.map(lesson => allLessonsArr.push(lesson)));
           setAllLessons([...allLessonsArr]);
         }
       })
@@ -169,38 +170,29 @@ export default function Curriculum() {
       }
 
       await axios.post("https://api.educobot.com/sessionRoute/generateOTP", body,
-        { headers: { 'Content-Type': 'application/json', 'authorization': `Bearer ${localStorage.getItem("accessToken")}` } }
-      ).then(res => {
-        if (res.data.STATUS == "SUCCESS") {
-          // to avoid storing of multiple otp of same lesson in the state
-          let newOtpArr = otp.filter((obj: { id: string; }) => obj?.id != id);
-          setOtp([...newOtpArr, { id: id, otp: res.data.PIN }]);
+        { headers: { 'Content-Type': 'application/json', 'authorization': `Bearer ${localStorage.getItem("accessToken")}`}}
+      )
+        .then(res => {
+          if (res.data.STATUS == "SUCCESS") {
+            // to avoid storing of multiple otp of same lesson in the state
+            let newOtpArr = otp.filter(obj => obj?.id != id);
+            setOtp([...newOtpArr, { id: id, otp: res.data.PIN }]);
 
-          // push id to identify that otp was already created for this lesson
-
-          if (!activeLesson.ActiveId.includes(id)) {
-            setActiveLesson((prev: any) => {
-              return {
-                ...prev,
-                ActiveId: [...prev.ActiveId, id]
-              }
-            })
+            // push id and condition to identify that if otp was already created for this lesson
+            if (!activeLesson.ActiveId.includes(id)) {
+              setActiveLesson((prev: any) => {
+                return {
+                  ...prev,
+                  ActiveId: [...prev.ActiveId, id]
+                }
+              })
+            }
           }
-
-          // remove the id from started as it's now active
-          if (activeLesson.started.includes(id)) {
-            let newStarted = activeLesson.started.filter(lsID => lsID !== id);
-            setActiveLesson((prev: any) => {
-              return {
-                ...prev,
-                started: [...prev.started, ...newStarted]
-              }
-            })
-          }
-        }
-      }).then(() => {
-        CheckOpenPin(divisionValue);
-      })
+        })
+        .then(() => {
+          CheckOpenPin(divisionValue);
+          ExpirednLastActiveLesson(divisionValue);
+        })
         .catch(err => {
           console.log(err)
         })
@@ -214,6 +206,7 @@ export default function Curriculum() {
 
   const token = localStorage.getItem("accessToken");
   const CheckOpenPin = async (option: any) => {
+    console.log("I ran first checkpin")
 
     if (classValue !== "Class" && option !== "Division") {
       try {
@@ -224,7 +217,6 @@ export default function Curriculum() {
               "authorization": `Bearer ${token}`
             }
           });
-
 
 
         setActiveLesson((prev: any) => {
@@ -250,13 +242,17 @@ export default function Curriculum() {
 
         if (response.data.data.length > 0) {
           let data = response.data.data;
+          //const otplessonIdArr = []; // this method not working as otp is not coming in sequence
+
           data.forEach((obj) => {
+
             ActiveIdArr.push(obj.spLessonID);
             validityArr.push(obj.spStartTime);
             startedArr.push(obj.spStartTime);
 
             type NewType = any;
 
+            //!otplessonIdArr.includes(obj.spLessonID) &&
             setOpenOtp((prev: NewType) => {
               return [...prev, {
                 id: obj.spLessonID,
@@ -264,14 +260,16 @@ export default function Curriculum() {
               }];
             });
 
+            //!otplessonIdArr.includes(obj.spLessonID) &&
             setOtp((prev: any) => {
               return [
                 ...prev,
                 { id: obj.spLessonID, otp: obj.spPIN }
               ]
             })
-          })
 
+            //otplessonIdArr.push(obj.spLessonID);
+          })
 
           setActiveLesson((prev: any) => {
             return {
@@ -292,13 +290,14 @@ export default function Curriculum() {
   }
 
 
-  const ExpirednLastActiveLesson = async(division) => {
+  const ExpirednLastActiveLesson = async (division) => {
+    console.log("I ran first expired")
     if (classValue !== "Class" && division !== "Division") {
       const token = localStorage.getItem("accessToken");
       try {
         token &&
           await axios.post("https://api.educobot.com/lessonsRoute/getMaxOTPLesson",
-            { "std": classValue, "div": division },
+            {"std": classValue, "div": division },
             {
               headers: {
                 "Content-Type": "application/json",
@@ -307,36 +306,47 @@ export default function Curriculum() {
             })
             .then(res => {
               const maxLesson = res.data.data[0].maxLessonNo;
-              setActiveLesson(prev=>{
-                return {
-                  ...prev,
-                  ActiveId:[...prev.ActiveId, allLessons[maxLesson].lsID],
-                  nextLesson:allLessons[maxLesson+1].lsID
-                }
-              })
+              console.log(maxLesson)
+
+              !activeLesson.expired.includes(allLessons[maxLesson].lsID) ?
+                setActiveLesson(prev => {
+                  return {
+                    ...prev,
+                    ActiveId: [...prev.ActiveId, allLessons[maxLesson].lsID],
+                    nextLesson: allLessons[maxLesson + 1].lsID
+                  }
+                })
+                :
+                setActiveLesson(prev => {
+                  return {
+                    ...prev,
+                    ActiveId: [...prev.ActiveId, allLessons[maxLesson + 1].lsID],
+                    nextLesson: allLessons[maxLesson + 2].lsID
+                  }
+                })
             })
             .catch(err => {
               console.log(err)
             })
 
-          // get the expired sessions
-          const ExpiredLessonsRes = token && 
-          await axios.post("https://api.educobot.com/sessionRoute/getClosedPIN",
-            { "std": classValue, "div": division },
-            {
-              headers: {
-                "Content-Type": "application/json",
-                "authorization": `Bearer ${token}`
-              },
-            });
-
-            ExpiredLessonsRes.data.data.length>0 &&
-            ExpiredLessonsRes.data.data.map(obj=>{
-              // save in activeLesson's expired array
-              setActiveLesson(prev=>{
-                return{...prev, expired:[...prev.expired, obj.spLessonID]}
-              })
-            })
+        // get the expired sessions
+        // const ExpiredLessonsRes = token &&
+        //   await axios.post("https://api.educobot.com/sessionRoute/getClosedPIN",
+        //     { "std": classValue, "div": division },
+        //     {
+        //       headers: {
+        //         "Content-Type": "application/json",
+        //         "authorization": `Bearer ${token}`
+        //       },
+        //     });
+        // console.log(ExpiredLessonsRes)
+        // ExpiredLessonsRes.data.data.length > 0 &&
+        //   ExpiredLessonsRes.data.data.map(obj => {
+        //     // save in activeLesson's expired array
+        //     setActiveLesson(prev => {
+        //       return { ...prev, expired: [...prev.expired, obj.spLessonID] }
+        //     })
+        //   })
       }
       catch (error) {
         console.log(error)
@@ -344,7 +354,7 @@ export default function Curriculum() {
     }
   }
 
-  // get the lessons and expired lessons and lastActiveLesson
+  // get the lessons and expired lessons
   useEffect(() => {
     getLessonData();
     openOTP.length > 0 && setOtp([...openOTP]);
@@ -366,9 +376,7 @@ export default function Curriculum() {
 
   useEffect(() => {
     ExpirednLastActiveLesson(divisionValue)
-  }, [otp])
-  
-
+  }, [])
 
 
 
@@ -398,6 +406,7 @@ export default function Curriculum() {
     setOpen2(null);
 
     CheckOpenPin(option);
+    ExpirednLastActiveLesson(option)
   };
 
   const handleCloseTitleDDL = (event: any, title: string) => {
@@ -408,7 +417,7 @@ export default function Curriculum() {
 
 
   return (
-    <Page title="User: List">
+    <Page title="Teacher: Curriculum">
 
       <Alert
         variant="filled"
@@ -535,7 +544,10 @@ export default function Curriculum() {
           data.length > 0 &&
           data.map((courses, index: any) => {
             return (
-              <LessonCard key={index} courses={courses} index={index} otp={otp} getOTP={getOTP} activeLesson={activeLesson} />
+              (classValue == "Class" || divisionValue == "Division") ?
+                <LessonCard key={index} courses={courses} index={index} otp={otp} getOTP={getOTP} activeLesson={activeLesson} isDivSelected={false} />
+                :
+                <LessonCard key={index} courses={courses} index={index} otp={otp} getOTP={getOTP} activeLesson={activeLesson} isDivSelected={true} />
             )
           })
         }
@@ -554,25 +566,27 @@ type LessonCardProps = {
   otp: any,
   getOTP: (id: string) => Promise<void>,
   activeLesson: any,
+  isDivSelected: boolean
 }
 
-export const LessonCard = ({ courses, index, otp, getOTP, activeLesson }: LessonCardProps) => {
+export const LessonCard = ({ courses, index, otp, getOTP, activeLesson, isDivSelected }: LessonCardProps) => {
   const theme = useTheme();
   const isLight = theme.palette.mode === "light";
-  let tags = ["tag1", "tag2", "tag3"];
+  let tags = ["tag1", "tag2", "tag3", "tag4"];
 
 
-  const openLesson = async(lsID:string) => {
+  const openLesson = async (lsID: string) => {
     try {
-        let blocklyLessons = ["4bda4814-a2b1-4c4f-b102-eda5181bd0f8", "1d749e84-1155-4269-93ab-550ee7aabd4a"];
-        let lessonType = blocklyLessons.includes(lsID) ? "blockly" : "game";
+      let blocklyLessons = ["4bda4814-a2b1-4c4f-b102-eda5181bd0f8", "1d749e84-1155-4269-93ab-550ee7aabd4a"];
+      let lessonType = blocklyLessons.includes(lsID) ? "blockly" : "game";
 
-        const userId = localStorage.getItem("userID");
-        const link = userId &&
-         `${process.env.webAppUrl}/${lessonType}/${lsID}?user_id=${userId}`
+      const userId = localStorage.getItem("userID");
+      const link = userId &&
+        `${process.env.webAppUrl}/${lessonType}/${lsID}?user_id=${userId}`;
 
-        window.location.href = (link && typeof window != 'undefined') ? link : window.location.href
-    } catch (error) {
+      (link && typeof window != 'undefined') && window.open(link)
+    }
+    catch (error) {
       console.log(error)
     }
   }
@@ -592,7 +606,7 @@ export const LessonCard = ({ courses, index, otp, getOTP, activeLesson }: Lesson
     // active & has otp
     if ((course.isActive || activeLesson.ActiveId.includes(lsID)) && isOTP == true) {
       return <>
-        <Button variant="contained" color="inherit" onClick={()=>openLesson(lsID)}>
+        <Button variant="contained" color="inherit" onClick={() => openLesson(lsID)}>
           Open
         </Button>
         <Button variant="contained" color="error" onClick={async () => await getOTP(course.lsID)}>
@@ -603,7 +617,7 @@ export const LessonCard = ({ courses, index, otp, getOTP, activeLesson }: Lesson
     // active & don't have otp
     else if ((course.isActive || activeLesson.ActiveId.includes(lsID)) && isOTP == false) {
       return <>
-        <Button variant="contained" color="inherit" onClick={()=>openLesson(lsID)}>
+        <Button variant="contained" color="inherit" onClick={() => openLesson(lsID)}>
           Open
         </Button>
         <Button variant="contained" color="error" onClick={async () => await getOTP(course.lsID)}>
@@ -611,10 +625,18 @@ export const LessonCard = ({ courses, index, otp, getOTP, activeLesson }: Lesson
         </Button>
       </>
     }
-    // next lesson to be able to get otp & expired ones
-    else if(course.lsID === activeLesson.nextLesson || activeLesson.expired.includes(course.lsID)){
+    // expired lesson
+    else if (activeLesson.expired.includes(course.lsID) && isDivSelected == true) {
       return <>
-        <Button variant="outlined" color="inherit" onClick={()=>openLesson(lsID)}>
+        <Button fullWidth variant="outlined" color="inherit" onClick={() => openLesson(lsID)}>
+          Open
+        </Button>
+      </>
+    }
+    // next lesson to be able to get otp
+    else if (course.lsID === activeLesson.nextLesson && isDivSelected == true) {
+      return <>
+        <Button variant="outlined" color="inherit" onClick={() => openLesson(lsID)}>
           Open
         </Button>
         <Button variant="outlined" color="inherit" onClick={async () => await getOTP(course.lsID)}>
@@ -635,7 +657,7 @@ export const LessonCard = ({ courses, index, otp, getOTP, activeLesson }: Lesson
   }
 
 
-  const validity = (milliseconds)=>{
+  const validity = (milliseconds) => {
     const d = new Date(Date.now());
     const date = d.getDate();
     const m = d.getMonth();
@@ -649,6 +671,10 @@ export const LessonCard = ({ courses, index, otp, getOTP, activeLesson }: Lesson
     return `${date} ${month} ${year}, ${hours}:${minutes} ${period}`;
   }
 
+  const getCurrentLessonOtp = (id) => {
+    return otp.map(obj => obj.id == id && obj.otp).filter(otp => otp !== undefined)[0];
+  }
+
   return (
     <div style={{ marginTop: "50px", padding: "0 10px" }}>
       <Typography variant="body2" component={"h1"}>
@@ -659,7 +685,7 @@ export const LessonCard = ({ courses, index, otp, getOTP, activeLesson }: Lesson
           courses.LESSONS.map((course: any, index: any) => {
             if (activeLesson.ActiveId.includes(course.lsID)) {
               let validityIndex = activeLesson.ActiveId.indexOf(course.lsID);
-              course = { ...course, isCompleted: false, isActive: true, validity: activeLesson.validity[validityIndex] }
+              course = { ...course, isCompleted: false, isActive: true, validity: activeLesson.validity[validityIndex], CurrOtp: getCurrentLessonOtp(course.lsID) }
             }
             return <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={course?.lsID}>
               <Card
@@ -674,8 +700,8 @@ export const LessonCard = ({ courses, index, otp, getOTP, activeLesson }: Lesson
                   flexDirection: "column",
                   justifyContent: "space-between",
                   ...((course.isActive) && { background: "linear-gradient(135deg, #84A9FF 0%, #1939B7 100%)" }),
-                  ...(((activeLesson.expired.includes(course.lsID) || activeLesson.nextLesson==course.lsID) && isLight) && {backgroundColor:pellete.light.grey[0]}),
-                  ...( ((!course.isActive) && (!activeLesson.expired.includes(course.lsID)) && (activeLesson.nextLesson!==course.lsID) && isLight) && {backgroundColor:pellete.light.grey[200]})
+                  ...(((activeLesson.expired.includes(course.lsID) || activeLesson.nextLesson == course.lsID) && isLight) && { backgroundColor: pellete.light.grey[0] }),
+                  ...(((!course.isActive) && (isDivSelected == false) && (activeLesson.nextLesson !== course.lsID) && isLight) && { backgroundColor: pellete.light.grey[200] })
                 }}>
                 {/* TITLE & INDEX */}
                 <Stack spacing={1.5} padding={1}>
@@ -690,12 +716,12 @@ export const LessonCard = ({ courses, index, otp, getOTP, activeLesson }: Lesson
                         backgroundColor: isLight
                           ? pellete.light.grey[900]
                           : pellete.light.grey[200],
-                        borderRadius: "100%",
                         padding: "0px 7px",
-                        border: "1.1px solid #F9FAFB",
+                        border: "1.2px solid #F9FAFB",
+                        borderRadius:"50%"
                       }}
                     >
-                      {index + 1}
+                      {course.lsLessonNo}
                     </Typography>
 
                     <Typography
@@ -709,34 +735,35 @@ export const LessonCard = ({ courses, index, otp, getOTP, activeLesson }: Lesson
                   </Stack>
 
 
-
                   {/* TAGS */}
                   <Grid container gap={1}>
                     {tags.map((tag, i) => (
                       <Grid item key={i}>
-                        <Chip
-                          key={i}
-                          size="small"
-                          label={tag}
-                          sx={{
-                            color: isLight
-                              ? pellete.light.grey[600]
-                              : pellete.light.grey[400],
-                            backgroundColor: isLight
-                              ? pellete.light.grey[500_16]
-                              : pellete.light.grey[700],
-                            borderRadius: "10px",
-                            ...(activeLesson.ActiveId.includes(course.lsID) && {
-                              backgroundColor: pellete.light.grey[300],
-                              color: pellete.light.grey[800],
-                            }),
-                          }}
-                        />
+                        {course[`lsSkillTag${i + 1}`] &&
+                          <Chip
+                            key={i}
+                            size="small"
+                            label={course[`lsSkillTag${i + 1}`]}
+                            sx={{
+                              color: isLight
+                                ? pellete.light.grey[600]
+                                : pellete.light.grey[400],
+                              backgroundColor: isLight
+                                ? pellete.light.grey[500_16]
+                                : pellete.light.grey[700],
+                              borderRadius: "10px",
+                              ...(activeLesson.ActiveId.includes(course.lsID) && {
+                                backgroundColor: pellete.light.grey[300],
+                                color: pellete.light.grey[800],
+                              }),
+                            }}
+                          />
+                        }
                       </Grid>
                     ))}
                   </Grid>
 
-                  <Image alt="image" src={"/imgs/rabbitImg.png"} width="100" maxHeight={"150px"} borderRadius={1} />
+                  <Image alt="image" src={`https://app.educobot.com/liveLessons/thumbNails/${course.lsName}.png`} width="100" maxHeight={"150px"} borderRadius={1} />
 
                   {/* DESCRIPTION */}
                   <Typography sx={{ color: course.isActive ? "#fff" : pellete.light.grey[500] }}>
@@ -766,10 +793,10 @@ export const LessonCard = ({ courses, index, otp, getOTP, activeLesson }: Lesson
                   </Stack>
 
 
-                  {/* VIEW REPORT BUTTON */}
+                  {/* VIEW REPORT / PROGRESS BUTTON */}
                   {(course.isActive) ?
-                    // if lesson is active and we have otp
                     otp &&
+                    // active
                     <Stack direction={"column"}>
                       {ifThisCardHaveOTP(course.lsID) == true &&
                         <>
@@ -778,13 +805,17 @@ export const LessonCard = ({ courses, index, otp, getOTP, activeLesson }: Lesson
                           </Typography>
                         </>
                       }
-                      <Button variant="contained" color="error" fullWidth sx={{ my: 1, fontWeight: 900 }}>View Progress</Button>
+                      <Link href={PATH_DASHBOARD.teacher.viewProgress + `?lsID=${course?.lsID}&otp=${course?.CurrOtp}`}>
+                        <Button variant="contained" color="error" fullWidth sx={{ my: 1, fontWeight: 900 }}>
+                          View Progress</Button>
+                      </Link>
                     </Stack>
                     :
-                    // not having otp but lesson is completed or expired
-                    activeLesson.expired.includes(course.lsID) &&
-                      // lesson completed and all students have done
-                        <Button variant="contained" color="warning" fullWidth sx={{ my: 1, fontWeight: 900 }}>View report</Button>
+                    // expired
+                    (activeLesson.expired.includes(course.lsID) && isDivSelected == true) &&
+                    <Link href={PATH_DASHBOARD.teacher.viewReport + `?lsID=${course?.lsID}`}>
+                      <Button variant="contained" color="warning" fullWidth sx={{ my: 1, fontWeight: 900 }}>View report</Button>
+                    </Link>
                   }
 
                   {/* bottom buttons */}

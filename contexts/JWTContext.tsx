@@ -18,9 +18,11 @@ type JWTAuthPayload = {
   [Types.Initial]: {
     isAuthenticated: boolean;
     user: AuthUser;
+    userType:string;
   };
   [Types.Login]: {
     user: AuthUser;
+    userType:string;
   };
   [Types.Logout]: undefined;
   [Types.Register]: {
@@ -35,6 +37,7 @@ const initialState: AuthState = {
   isAuthenticated: false,
   isInitialized: false,
   user: null,
+  userType:null,
 };
 
 const JWTReducer = (state: AuthState, action: JWTActions) => {
@@ -44,12 +47,14 @@ const JWTReducer = (state: AuthState, action: JWTActions) => {
         isAuthenticated: action.payload.isAuthenticated,
         isInitialized: true,
         user: action.payload.user,
+        userType: action.payload.userType,
       };
     case "LOGIN":
       return {
         ...state,
         isAuthenticated: true,
         user: action.payload.user,
+        userType: action.payload.userType,
       };
     case "LOGOUT":
       return {
@@ -90,13 +95,14 @@ function AuthProvider({ children }: AuthProviderProps) {
           setSession(accessToken);
 
           const response = await axios.get("/api/account/my-account");
-          const { user } = response.data;
+          const { user, userType } = response.data;
 
           dispatch({
             type: Types.Initial,
             payload: {
               isAuthenticated: true,
               user,
+              userType,
             },
           });
         } else {
@@ -105,6 +111,7 @@ function AuthProvider({ children }: AuthProviderProps) {
             payload: {
               isAuthenticated: false,
               user: null,
+              userType:null,
             },
           });
         }
@@ -115,6 +122,7 @@ function AuthProvider({ children }: AuthProviderProps) {
           payload: {
             isAuthenticated: false,
             user: null,
+            userType:null,
           },
         });
       }
@@ -129,7 +137,7 @@ function AuthProvider({ children }: AuthProviderProps) {
       email,
       password,
     });
-    const { accessToken, user } = response.data;
+    const { accessToken, user, userType } = response.data;
 
     setSession(accessToken);
 
@@ -137,6 +145,7 @@ function AuthProvider({ children }: AuthProviderProps) {
       type: Types.Login,
       payload: {
         user,
+        userType,
       },
     });
   };

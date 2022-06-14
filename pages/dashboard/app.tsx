@@ -48,7 +48,8 @@ export default function GeneralApp() {
   // );
   return (
     <Page title="General: App">
-      {user?.role==="Student" && 
+      {console.log(user)}
+      {(user?.role==="Student" || user?.userType=="Student") && 
       <Container maxWidth={themeStretch ? false : "xl"}>
         <Grid container spacing={3}>
           <Grid item xs={12}>
