@@ -26,9 +26,9 @@ const isValidToken = (accessToken: string) => {
 //   }, timeLeft);
 // };
 
-const setSession = (accessToken: string | null, user?: any, schoolID?: any) => {
+const setSession = (accessToken: string | null, user?: any, schoolID?: string, userType?:string) => {
   if (accessToken) {
-    window.localStorage.setItem("role", "superAdmin");
+    window.localStorage.setItem("role", userType);
     localStorage.setItem("accessToken", accessToken);
     user && window.localStorage.setItem("userID", user);
     schoolID && window.localStorage.setItem("schoolID", schoolID);

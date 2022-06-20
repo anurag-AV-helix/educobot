@@ -15,11 +15,14 @@ type Props = {
 export default function GuestGuard({ children }: Props) {
   const { push } = useRouter();
 
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
+
 
   useEffect(() => {
+    const role = user.role.toLowerCase();
     if (isAuthenticated) {
-      push(PATH_DASHBOARD.root);
+      push(user.role=="Student" ? PATH_DASHBOARD.root : PATH_DASHBOARD.teacher.root);
+      //push(role!=="" ? PATH_DASHBOARD[role].root : PATH_DASHBOARD.root)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated]);

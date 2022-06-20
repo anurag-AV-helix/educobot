@@ -288,22 +288,22 @@ enum Types {
 
 type FirebaseAuthPayload = {
   [Types.Initial]: {
-    isAuthenticated: boolean;
-    user: AuthUser;
-    userType:string;
+      isAuthenticated: boolean;
+      user: AuthUser;
+      userType: string;
   };
   [Types.Login]: {
-    isAuthenticated: boolean;
-    user: AuthUser;
-    userType:string;
+      isAuthenticated: boolean;
+      user: AuthUser;
+      userType: string;
   };
   [Types.Logout]: {
-    isAuthenticated: boolean;
-    user: AuthUser;
+      isAuthenticated: boolean;
+      user: AuthUser;
   };
   [Types.Register]: {
-    isAuthenticated: boolean;
-    user: AuthUser;
+      isAuthenticated: boolean;
+      user: AuthUser;
   };
 };
 
@@ -312,39 +312,39 @@ type FirebaseActions =
 
 const reducer = (state: AuthState, action: FirebaseActions) => {
   if (action.type === "INITIALISE") {
-    const { isAuthenticated, user, userType} = action.payload;
-    return {
-      ...state,
-      isAuthenticated,
-      isInitialized: true,
-      user,
-      userType,
-    };
+      const { isAuthenticated, user, userType } = action.payload;
+      return {
+          ...state,
+          isAuthenticated,
+          isInitialized: true,
+          user,
+          userType,
+      };
   } else if (action.type === "LOGIN") {
-    const { isAuthenticated, user,userType } = action.payload;
-    return {
-      ...state,
-      isAuthenticated,
-      isInitialized: true,
-      user,
-      userType,
-    };
+      const { isAuthenticated, user, userType } = action.payload;
+      return {
+          ...state,
+          isAuthenticated,
+          isInitialized: true,
+          user,
+          userType,
+      };
   } else if (action.type === "REGISTER") {
-    const { isAuthenticated, user } = action.payload;
-    return {
-      ...state,
-      isAuthenticated,
-      isInitialized: true,
-      user,
-    };
+      const { isAuthenticated, user } = action.payload;
+      return {
+          ...state,
+          isAuthenticated,
+          isInitialized: true,
+          user,
+      };
   } else if (action.type === "LOGOUT") {
-    const { isAuthenticated, user } = action.payload;
-    return {
-      ...state,
-      isAuthenticated,
-      isInitialized: false,
-      user,
-    };
+      const { isAuthenticated, user } = action.payload;
+      return {
+          ...state,
+          isAuthenticated,
+          isInitialized: false,
+          user,
+      };
   }
   return state;
 };
@@ -365,164 +365,166 @@ function AuthProvider({ children }: AuthProviderProps) {
   const [profile, setProfile] = useState<any>();
   let isNewUser: boolean | undefined = false;
 
-  // useEffect(
-  //   () =>
-  //     onAuthStateChanged(AUTH, async (user) => {
-  //       console.log("user", user)
-  //       //const token = window.localStorage.getItem("accessToken");
-  //       if (user) {
-  //         // setProfile(user);
-  //         dispatch({
-  //           type: Types.Initial,
-  //           payload: { isAuthenticated: true, user, userType:"" },
-  //         });
-  //       } else {
-  //         dispatch({
-  //           type: Types.Initial,
-  //           payload: { isAuthenticated: false, user: null, userType:""},
-  //         });
-  //       }
-  //     }),
-  //   [dispatch]
-  // );
+  useEffect(
+      () =>
+          onAuthStateChanged(AUTH, async (user) => {
+              const method = window.localStorage.getItem("method");
+              if (!method) return;
+              if (user) {
+                  dispatch({
+                      type: Types.Initial,
+                      payload: { isAuthenticated: true, user, userType: "" },
+                  });
+              } else {
+                  dispatch({
+                      type: Types.Initial,
+                      payload: { isAuthenticated: false, user: null, userType: "" },
+                  });
+              }
+          }),
+      [dispatch]
+  );
 
   useEffect(() => {
-    const initialize = async () => {
-      try {
-        const accessToken = window.localStorage.getItem("accessToken");
-        if (accessToken && isValidToken(accessToken)) {
-          //setSession(accessToken);
-          // if (typeof isNewUser !== 'undefined' && !isNewUser) {
-          //   const response = await axios.get('/api/account/my-account');
-          //   const { user } = response.data;
-          //   setProfile(user);
-          // }
-          dispatch({
-            type: Types.Initial,
-            payload: {
-              isAuthenticated: true,
-              user: profile,
-              userType:""
-            },
-          });
-        } else {
-          dispatch({
-            type: Types.Initial,
-            payload: {
-              isAuthenticated: false,
-              user: null,
-              userType:""
-            },
-          });
-        }
-      } catch (err) {
-        console.error(err);
-        dispatch({
-          type: Types.Initial,
-          payload: {
-            isAuthenticated: false,
-            user: null,
-            userType:""
-          },
-        });
-      }
-    };
-    initialize();
+      const initialize = async () => {
+          try {
+              const accessToken = window.localStorage.getItem("accessToken");
+              const role = window.localStorage.getItem("role");
+              const user = window.localStorage.getItem("user");
+
+              if (accessToken && isValidToken(accessToken)) {
+
+                  dispatch({
+                      type: Types.Initial,
+                      payload: {
+                          isAuthenticated: true,
+                          user: { userId: user },
+                          userType: role
+                      },
+                  });
+              } else {
+                  dispatch({
+                      type: Types.Initial,
+                      payload: {
+                          isAuthenticated: false,
+                          user: null,
+                          userType: ""
+                      },
+                  });
+              }
+          } catch (err) {
+              console.error(err);
+              dispatch({
+                  type: Types.Initial,
+                  payload: {
+                      isAuthenticated: false,
+                      user: null,
+                      userType: ""
+                  },
+              });
+          }
+      };
+      initialize();
   }, []);
 
 
   const login = async (email: string, password: string) => {
-    //const response = await axios.post('https://minimal-assets-api.vercel.app/api/account/register',
-    const response = await axios.post("/users/getUser", {
-      email,
-      password,
-    });
-
-    const { token, user, schoolID, userType} = response.data;
-    setSession(token, user, schoolID);
-    if (user) {
-      setProfile(user);
-      dispatch({
-        type: Types.Login,
-        payload: { isAuthenticated: true, user, userType },
+      localStorage.removeItem("method");
+      const response = await axios.post("/users/getUser", {
+          email,
+          password,
       });
-    }
-    return user;
+
+      const { token, user, schoolID, userType } = response.data;
+      setSession(token, user, schoolID, userType); //user = id
+
+      if (user) {
+          setProfile(user);
+          dispatch({
+              type: Types.Login,
+              payload: { isAuthenticated: true, user, userType },
+          });
+      }
+      return user;
   };
 
   const register = async (
-    email: string,
-    password: string,
-    firstName: string,
-    lastName: string
+      email: string,
+      password: string,
+      firstName: string,
+      lastName: string
   ) => {
-    //const response = await axios.post('https://minimal-assets-api.vercel.app/api/account/register', {
-    const response = await axios.post("/users/saasSignUP", {
-      email,
-      password,
-      fname: firstName,
-      lname: lastName,
-    });
-    const { token, user } = response.data;
-    setSession(token);
-    // if (user) {
-    setProfile(user);
-    dispatch({
-      type: Types.Register,
-      payload: { isAuthenticated: true, user },
-    });
-    // }
+      localStorage.removeItem("method");
+      const response = await axios.post("/users/saasSignUP", {
+          email,
+          password,
+          fname: firstName,
+          lname: lastName,
+      });
+      const { token, user } = response.data;
+      setSession(token);
+
+      setProfile(user);
+      dispatch({
+          type: Types.Register,
+          payload: { isAuthenticated: true, user },
+      });
+
   };
 
   const socialMediaAuth = async (provider: AuthProvider) => {
-    signInWithPopup(AUTH, provider).then((res: any) => {
-      const accessToken = res.user.accessToken;
-      isNewUser = getAdditionalUserInfo(res)?.isNewUser;
-      setProfile(res.user);
-      setSession(accessToken);
-      return res.user;
-    });
+      signInWithPopup(AUTH, provider).then((res: any) => {
+          const accessToken = res.user.accessToken;
+          isNewUser = getAdditionalUserInfo(res)?.isNewUser;
+          setProfile(res.user);
+          console.log(res)
+          setSession(accessToken);
+          window.localStorage.setItem("method", "firebase");
+          const user = res.user;
+          dispatch({
+              type: Types.Login,
+              payload: { isAuthenticated: true, user, userType: "" },
+          });
+          return res.user;
+      });
   };
 
   const logout = () => {
-    setSession(null);
-    dispatch({
-      type: Types.Logout,
-      payload: { isAuthenticated: false, user: null },
-    });
-    return signOut(AUTH);
+    window.localStorage.removeItem("role");
+    window.localStorage.removeItem("accessToken");
+    window.localStorage.removeItem("userID");
+    window.localStorage.removeItem("schoolID");
+
+      setSession(null);
+      dispatch({
+          type: Types.Logout,
+          payload: { isAuthenticated: false, user: null },
+      });
+      return signOut(AUTH);
   };
   return (
-    <>
-      <AuthContext.Provider
-        value={{
-          ...state,
-          method: "firebase",
-          user: {
-            id: state?.user?.userID,
-            email: state?.user?.suEmail,
-            photoURL: state?.user?.photoURL || profile?.photoURL,
-            displayName: state?.user?.name || profile?.name || state?.userType,
-            // role: ADMIN_EMAILS.includes(state?.user?.email) ? "admin" : "student",
-            role: state?.userType || "",
-            phoneNumber: state?.user?.phoneNumber || profile?.phoneNumber || "",
-            country: profile?.country || "",
-            address: profile?.address || "",
-            state: profile?.state || "",
-            city: profile?.city || "",
-            zipCode: profile?.zipCode || "",
-            about: profile?.about || "",
-            isPublic: profile?.isPublic || false,
-          },
-          login,
-          register,
-          logout,
-          socialMediaAuth,
-        }}
-      >
-        {children}
-      </AuthContext.Provider>
-    </>
+      <>
+          <AuthContext.Provider
+              value={{
+                  ...state,
+                  method: "firebase",
+                  user: {
+                      id: state?.user?.userID || state?.user?.uid,
+                      email: state?.user?.suEmail || state?.user?.email,
+                      photoURL: state?.user?.photoURL || profile?.photoURL,
+                      displayName: state?.user?.name || profile?.name || state?.userType || state?.user?.displayName,
+                      // role: ADMIN_EMAILS.includes(state?.user?.email) ? "admin" : "student",
+                      role: state?.userType || "",
+                  },
+                  login,
+                  register,
+                  logout,
+                  socialMediaAuth,
+              }}
+          >
+              {children}
+          </AuthContext.Provider>
+      </>
   );
 }
 

@@ -51,7 +51,7 @@ export const PATH_DASHBOARD = {
     // list: path(ROOTS_DASHBOARD, `/student/list`),
   },
   teacher: {
-    root: path(ROOTS_DASHBOARD, "/teacher"),
+    root: path(ROOTS_DASHBOARD, "/teacher/curriculum"), //need be change in future
     demoEdit: path(ROOTS_DASHBOARD, `/teacher/ashutosh/edit`),
     list: path(ROOTS_DASHBOARD, `/teacher/studentlist`),
     new: path(ROOTS_DASHBOARD, "/teacher/new"),

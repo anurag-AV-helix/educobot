@@ -18,6 +18,7 @@ import SyllabusCard from "../../MyComponents/DashBoardCardComp/SyllaBusCardComp/
 import AchievementCard from "../../MyComponents/DashBoardCardComp/AchievementCardComp/AchievementCard";
 //import CodeDialog
 import CodeDialog from "../../MyComponents/DialogBoxComp/CodeDialog";
+import { useRouter } from "next/router";
 // ----------------------------------------------------------------------
 
 GeneralApp.getLayout = function getLayout(page: React.ReactElement) {
@@ -28,6 +29,7 @@ GeneralApp.getLayout = function getLayout(page: React.ReactElement) {
 
 export default function GeneralApp() {
   const { user } = useAuth();
+  const router = useRouter();
 
   const theme = useTheme();
 
@@ -46,83 +48,83 @@ export default function GeneralApp() {
   //         </Container>
   //     </Page>
   // );
-  return (
-    <Page title="General: App">
-      {console.log(user)}
-      {(user?.role==="Student" || user?.userType=="Student") && 
-      <Container maxWidth={themeStretch ? false : "xl"}>
-        <Grid container spacing={3}>
-          <Grid item xs={12}>
-            <DashWelcome />
-          </Grid>
-          <Grid item xs={12}>
-            <CourseCards />
-          </Grid>
-          <Grid item xs={12} sm={12} md={4} lg={4} xl={4}>
-            <SyllabusCard
-              card={{
-                title:
-                  "You have completed more than expexted since March 2021. Awesome : )",
-                chartData: [75, 50],
-                labels: ["Completed", "Benchmark"],
-                total: 100,
-              }}
-            />
-          </Grid>
+    return (
+      <Page title="General: App">
+        {console.log(user)}
+        {/* student dashboard */}
+        <Container maxWidth={themeStretch ? false : "xl"}>
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <DashWelcome />
+            </Grid>
+            <Grid item xs={12}>
+              <CourseCards />
+            </Grid>
+            <Grid item xs={12} sm={12} md={4} lg={4} xl={4}>
+              <SyllabusCard
+                card={{
+                  title:
+                    "You have completed more than expexted since March 2021. Awesome : )",
+                  chartData: [75, 50],
+                  labels: ["Completed", "Benchmark"],
+                  total: 100,
+                }}
+              />
+            </Grid>
 
-          <Grid item xs={12} md={8} lg={8}>
-            <AchievementCard
-              card={{
-                title:
-                  "Last year, you have earned more coins than most students in your age group ",
-                CHART_DATA: [
-                  {
-                    year: "Current Year",
-                    data: [
-                      {
-                        name: "My Coins",
-                        data: [10, 41, 35, 45],
-                      },
-                      {
-                        name: "Average Coins earned in my age group",
-                        data: [10, 34, 13, 56],
-                      },
-                    ],
-                  },
-                  {
-                    year: "Last Year",
-                    data: [
-                      {
-                        name: "My Coins",
-                        data: [148, 91, 69, 62, 49, 51, 35, 41, 10, 49, 51, 35],
-                      },
-                      {
-                        name: "Average Coins earned in my age group",
-                        data: [45, 77, 99, 88, 77, 56, 13, 34, 10, 49, 51, 35],
-                      },
-                    ],
-                  },
-                  {
-                    year: "2019-20",
-                    data: [
-                      {
-                        name: "My Coins",
-                        data: [148, 91, 69, 62, 49, 49, 51, 35, 51, 35, 41, 10],
-                      },
-                      {
-                        name: "Average Coins earned in my age group",
-                        data: [45, 77, 99, 49, 51, 35, 88, 77, 56, 13, 34, 10],
-                      },
-                    ],
-                  },
-                ],
-              }}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <RewardsComponent />
-          </Grid>
-          {/* <Grid item xs={12}>
+            <Grid item xs={12} md={8} lg={8}>
+              <AchievementCard
+                card={{
+                  title:
+                    "Last year, you have earned more coins than most students in your age group ",
+                  CHART_DATA: [
+                    {
+                      year: "Current Year",
+                      data: [
+                        {
+                          name: "My Coins",
+                          data: [10, 41, 35, 45],
+                        },
+                        {
+                          name: "Average Coins earned in my age group",
+                          data: [10, 34, 13, 56],
+                        },
+                      ],
+                    },
+                    {
+                      year: "Last Year",
+                      data: [
+                        {
+                          name: "My Coins",
+                          data: [148, 91, 69, 62, 49, 51, 35, 41, 10, 49, 51, 35],
+                        },
+                        {
+                          name: "Average Coins earned in my age group",
+                          data: [45, 77, 99, 88, 77, 56, 13, 34, 10, 49, 51, 35],
+                        },
+                      ],
+                    },
+                    {
+                      year: "2019-20",
+                      data: [
+                        {
+                          name: "My Coins",
+                          data: [148, 91, 69, 62, 49, 49, 51, 35, 51, 35, 41, 10],
+                        },
+                        {
+                          name: "Average Coins earned in my age group",
+                          data: [45, 77, 99, 49, 51, 35, 88, 77, 56, 13, 34, 10],
+                        },
+                      ],
+                    },
+                  ],
+                }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <RewardsComponent />
+            </Grid>
+            {/* <Grid item xs={12}>
             <CodeDialog
               dialogInfo={{
                 dialogStatus: "start",
@@ -144,8 +146,8 @@ export default function GeneralApp() {
               // }}
             />
           </Grid> */}
-        </Grid>
-      </Container>}
-    </Page>
-  );
+          </Grid>
+        </Container>
+      </Page>
+    )
 }

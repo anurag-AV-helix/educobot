@@ -127,11 +127,11 @@ const teacherConfig = [
   {
     subheader: "main",
     items: [
-      {
-        title: "Dashboard",
-        path: PATH_DASHBOARD.general.app,
-        icon: ICONS.dashboard,
-      },
+      // {
+      //   title: "Dashboard",
+      //   path: PATH_DASHBOARD.general.app,
+      //   icon: ICONS.dashboard,
+      // },
       {
         title: "Curriculum",
         path: PATH_DASHBOARD.teacher.curriculum,

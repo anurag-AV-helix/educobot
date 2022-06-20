@@ -35,7 +35,7 @@ const RootStyle = styled(AppBar)(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 function NavbarHorizontal() {
-  const [whichNavBar, setNavBar] = useState(navConfig);
+  const [whichNavBar, setNavBar] = useState(navConfig); //roleconfig.default
   const { user } = useAuth();
 
   useEffect(() => {
@@ -51,6 +51,9 @@ function NavbarHorizontal() {
     } else {
       setNavBar(navConfig);
     }
+
+    // if(role) setNavBar(roleConfig[`${role.toLowerCase()}`])
+
   }, [whichNavBar]);
   return (
     <RootStyle>

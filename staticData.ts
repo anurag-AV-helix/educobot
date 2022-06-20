@@ -5,14 +5,17 @@ export const LICENSE_TYPES = ["Basic", "Intermediate", "Advanced"];
 export const pricing = [
     {
         price: "INR 5,000/-",
+        INR: "INR 5,000/-"
     },
     {
         price: "300 credits",
-        caption: "1 credit = INR 25/-"
+        caption: "1 credit = INR 25/-",
+        INR: "INR 15,000/-"
     },
     {
         price: "470 credits",
-        caption: "1 credit = INR 25/-"
+        caption: "1 credit = INR 25/-",
+        INR: "INR 20,000/-"
     }];
 
 export const terms = [
@@ -22,9 +25,9 @@ export const terms = [
 ];
 
 export const courceLength = [
-    ["10 levels", "-70 lessons", "-108 hours of learning"],
-    ["10 levels", "-120 lessons"],
-    ["10 levels", "-20 lessons"]
+    ["10 levels", "~70 lessons", "~108 hours of learning"],
+    ["10 levels", "~120 lessons"],
+    ["10 levels", "~20 lessons"]
 ];
 
 export const syllabus = [
@@ -50,9 +53,32 @@ export const _homePlans = [...Array(3)].map((_, index) => ({
         'Design Resources',
         'Commercial applications',
     ],
-    icons: [icons[index]]
+    icons: [icons[index]],
 }));
 
+const info = ["Choose to pay in 2 installments", "Cancel within 14 days for full refund", "3 year access(T & C apply)"];
+export const indexcourceLength = [
+    ["10 levels", "~70 lessons", "~108 hours of learning"],
+    ["10 levels", "~120 lessons", "~108 hours of learning"],
+    ["10 levels", "~20 lessons", "~108 hours of learning"]
+];
+export const _indexPlans = [...Array(3)].map((_, index) => ({
+    title: TITLES[index],
+    LICENSE_TYPE: LICENSE_TYPES[index],
+    price: pricing[index].INR,
+    terms: info,
+    courceLength: indexcourceLength[index],
+    syllabus: syllabus[index],
+    commons: ['One end products', '12 months updates', '6 months of support'],
+    options: [
+        'JavaScript version',
+        'TypeScript version',
+        'Design Resources',
+        'Commercial applications',
+    ],
+    icons: [icons[index]],
+
+}));
 
 // -------------------------------------------------------------------------------------------------
 
@@ -108,59 +134,59 @@ export const _pricingPlans = [
 //dashboard cards data
 export const dashboardCardData = [
     {
-        title:"Bunny & Carrot",
-        tags:["tag1", "tag2", "tag3"],
-        desc:"Help bunny to eat the carrot and return home",
-        ratings:1.5,
-        status:"done",
-        img:"/imgs/rabbitImg.png"
+        title: "Bunny & Carrot",
+        tags: ["tag1", "tag2", "tag3"],
+        desc: "Help bunny to eat the carrot and return home",
+        ratings: 1.5,
+        status: "done",
+        img: "/imgs/rabbitImg.png"
     },
     {
-        title:"Bunny & Carrot",
-        tags:["tag1", "tag2", "tag3"],
-        desc:"Help bunny to eat the carrot and return home",
-        ratings:4,
-        status:"done",
-        img:"/imgs/rabbitImg.png"
+        title: "Bunny & Carrot",
+        tags: ["tag1", "tag2", "tag3"],
+        desc: "Help bunny to eat the carrot and return home",
+        ratings: 4,
+        status: "done",
+        img: "/imgs/rabbitImg.png"
     },
     {
-        title:"Bunny & Carrot",
-        tags:["tag1", "tag2", "tag3"],
-        desc:"Help bunny to eat the carrot and return home",
-        status:"start",
-        ratings:undefined,
-        img:"/imgs/rabbitImg.png"
+        title: "Bunny & Carrot",
+        tags: ["tag1", "tag2", "tag3"],
+        desc: "Help bunny to eat the carrot and return home",
+        status: "start",
+        ratings: undefined,
+        img: "/imgs/rabbitImg.png"
     },
     {
-        title:"Bunny & Carrot",
-        tags:["tag1", "tag2", "tag3"],
-        desc:"Help bunny to eat the carrot and return home",
-        ratings:0,
-        status:"locked",
-        img:"/imgs/rabbitImg.png"
+        title: "Bunny & Carrot",
+        tags: ["tag1", "tag2", "tag3"],
+        desc: "Help bunny to eat the carrot and return home",
+        ratings: 0,
+        status: "locked",
+        img: "/imgs/rabbitImg.png"
     },
     {
-        title:"Bunny & Carrot",
-        tags:["tag1", "tag2", "tag3"],
-        desc:"Help bunny to eat the carrot and return home",
-        ratings:undefined,
-        status:"locked",
-        img:"/imgs/rabbitImg.png"
+        title: "Bunny & Carrot",
+        tags: ["tag1", "tag2", "tag3"],
+        desc: "Help bunny to eat the carrot and return home",
+        ratings: undefined,
+        status: "locked",
+        img: "/imgs/rabbitImg.png"
     },
     {
-        title:"Bunny & Carrot",
-        tags:["tag1", "tag2", "tag3"],
-        desc:"Help bunny to eat the carrot and return home",
-        ratings:undefined,
-        status:"locked",
-        img:"/imgs/rabbitImg.png"
+        title: "Bunny & Carrot",
+        tags: ["tag1", "tag2", "tag3"],
+        desc: "Help bunny to eat the carrot and return home",
+        ratings: undefined,
+        status: "locked",
+        img: "/imgs/rabbitImg.png"
     },
     {
-        title:"Bunny & Carrot",
-        tags:["tag1", "tag2", "tag3"],
-        desc:"Help bunny to eat the carrot and return home",
-        ratings:undefined,
-        status:"locked",
-        img:"/imgs/rabbitImg.png"
+        title: "Bunny & Carrot",
+        tags: ["tag1", "tag2", "tag3"],
+        desc: "Help bunny to eat the carrot and return home",
+        ratings: undefined,
+        status: "locked",
+        img: "/imgs/rabbitImg.png"
     },
 ]

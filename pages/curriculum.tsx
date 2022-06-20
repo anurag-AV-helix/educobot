@@ -58,9 +58,9 @@ export default function Curriculum() {
 
                 <Grid container spacing={5}>
                     {_homePlans.map((plan: any) => (
-                        <Grid key={plan.license} item xs={12} md={4}>
+                        <Grid key={plan.LICENSE_TYPE} item xs={12} md={4}>
                             <m.div
-                                variants={plan.license === 'Standard Plus' ? varFade().inDown : varFade().inUp}
+                                variants={plan.LICENSE_TYPE === 'Standard Plus' ? varFade().inDown : varFade().inUp}
                             >
                                 <PlanCard plan={plan} />
                             </m.div>
